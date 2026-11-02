@@ -1,0 +1,943 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>DEEP Aqua Business Suite</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23061423'/%3E%3Cpath d='M50 20C50 20 34 38 34 50C34 58.8 41.2 66 50 66C58.8 66 66 58.8 66 50C66 38 50 20 50 20Z' fill='%2322d3ee'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* ============ DEEP Aqua — light 3D theme ============ */
+:root{
+  --bg:#f2f6fb; --surface:#ffffff; --surface2:#f7fafd;
+  --fg:#0b2540; --fg2:#2b4763; --muted:#6b8199;
+  --line:#e3eaf2; --line2:#d2dde9;
+  --teal:#0ea5b7; --aqua:#0284c7; --deep:#063b5b; --violet:#6d5dfc; --amber:#f59e0b; --rose:#f43f5e; --green:#10b981;
+  --grad:linear-gradient(135deg,#06b6d4 0%,#0284c7 55%,#4f46e5 100%);
+  --ok:#059669; --ok-bg:#e6f7f0; --warn:#b45309; --warn-bg:#fdf3e1; --bad:#e11d48; --bad-bg:#fde8ec;
+  --display:'Sora',Georgia,serif; --body:'Outfit',system-ui,-apple-system,'Segoe UI',sans-serif; --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  --r:20px; --r2:14px;
+  --sh1:0 1px 2px rgba(11,37,64,.05),0 4px 14px -6px rgba(11,37,64,.10);
+  --sh2:0 2px 4px rgba(11,37,64,.04),0 18px 40px -18px rgba(11,37,64,.22);
+  --sh3:0 30px 60px -24px rgba(2,132,199,.35);
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%}
+#root{min-height:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before,body::after{content:"";position:fixed;z-index:-2;border-radius:50%;filter:blur(80px);pointer-events:none}
+body::before{width:52vw;height:52vw;left:-14vw;top:-20vw;background:radial-gradient(circle,rgba(6,182,212,.22),transparent 65%);animation:float1 24s ease-in-out infinite}
+body::after{width:50vw;height:50vw;right:-14vw;bottom:-22vw;background:radial-gradient(circle,rgba(79,70,229,.16),transparent 65%);animation:float2 28s ease-in-out infinite}
+@keyframes float1{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(5vw,4vh,0) scale(1.1)}}
+@keyframes float2{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(-5vw,-5vh,0) scale(.94)}}
+h1,h2,h3{margin:0;font-weight:700;font-family:var(--display);line-height:1.15;letter-spacing:-.025em;text-wrap:balance;color:var(--fg)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--aqua);outline-offset:2px}
+.num,td.n,th.n{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+a{color:var(--aqua)}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:#cfdae6;border-radius:10px;border:2px solid var(--bg)}
+::-webkit-scrollbar-track{background:transparent}
+
+/* ---- buttons ---- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line2);border-radius:12px;padding:10px 15px;font-weight:600;font-size:13.5px;cursor:pointer;background:var(--surface);color:var(--fg);white-space:nowrap;text-decoration:none;box-shadow:var(--sh1);
+  transition:transform .18s cubic-bezier(.2,.8,.3,1),box-shadow .18s,background .18s,border-color .18s,color .18s}
+.btn:hover{transform:translateY(-2px);border-color:#9fd6e6;color:var(--aqua);box-shadow:0 12px 24px -12px rgba(2,132,199,.45)}
+.btn:active{transform:translateY(0) scale(.98)}
+.btn.primary{background:var(--grad);background-size:160% 160%;color:#fff;border-color:transparent;box-shadow:0 12px 26px -12px rgba(2,132,199,.75);animation:sheen 6s ease infinite}
+.btn.primary:hover{color:#fff;box-shadow:0 18px 36px -14px rgba(79,70,229,.7)}
+@keyframes sheen{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.btn.ghost{background:transparent;border-color:transparent;box-shadow:none}
+.btn.ghost:hover{background:#eaf4fa}
+.btn.danger{color:var(--bad);border-color:#f7c4cf}
+.btn.danger:hover{background:var(--bad-bg);color:var(--bad);box-shadow:0 12px 24px -14px rgba(225,29,72,.5)}
+.btn.sm{padding:7px 11px;font-size:12.5px;border-radius:10px}
+.btn svg,.ico{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+
+/* ---- fields ---- */
+.field{display:grid;gap:6px;min-width:0}
+.field>span{font:600 10.5px var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+input[type=text],input[type=email],input[type=password],input[type=number],input[type=date],input[type=search],select,textarea{
+  width:100%;background:var(--surface);border:1px solid var(--line2);border-radius:12px;padding:11px 13px;font-size:14.5px;min-width:0;color:var(--fg);
+  transition:border-color .18s,box-shadow .18s}
+input::placeholder,textarea::placeholder{color:#9aabbd}
+input:focus,select:focus,textarea:focus{border-color:var(--aqua);outline:none;box-shadow:0 0 0 4px rgba(2,132,199,.12)}
+input:disabled,select:disabled,textarea:disabled{background:var(--surface2);color:var(--fg2)}
+textarea{min-height:80px;resize:vertical}
+.check{display:flex;gap:9px;align-items:center;cursor:pointer}
+.check input{width:17px;height:17px;accent-color:var(--aqua)}
+
+/* ================= LOGIN ================= */
+.auth{min-height:100vh;display:grid;grid-template-columns:1.1fr 1fr;perspective:1400px}
+.auth-art{position:relative;overflow:hidden;padding:52px max(34px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;justify-content:space-between;gap:30px;
+  background:linear-gradient(145deg,#38bdf8 0%,#0891b2 42%,#0b4f7a 78%,#063b5b 100%);color:#fff}
+.auth-art::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.18) 1px,transparent 1.5px);background-size:22px 22px;mask-image:linear-gradient(180deg,#000 10%,transparent 75%);-webkit-mask-image:linear-gradient(180deg,#000 10%,transparent 75%)}
+.auth-art .lg{background:#fff;border-radius:16px;padding:12px 18px;width:max-content;box-shadow:0 20px 44px -18px rgba(3,30,50,.7);position:relative;z-index:2}
+.auth-art .lg img{height:40px;display:block}
+.auth-art h1{font-size:clamp(34px,4.2vw,56px);color:#fff;max-width:13ch;position:relative;z-index:2;text-shadow:0 10px 30px rgba(3,30,50,.35)}
+.auth-art p{color:#e0f4fb;max-width:44ch;position:relative;z-index:2;font-size:16px}
+.auth-art ul{list-style:none;padding:0;margin:0;display:grid;gap:10px;font-size:14.5px;color:#f0fbff;position:relative;z-index:2}
+.auth-art li{display:flex;align-items:center;gap:11px}
+.auth-art li::before{content:"✓";display:grid;place-items:center;width:22px;height:22px;border-radius:7px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);font-size:12px;font-weight:700;flex:none}
+.waves{position:absolute;left:0;right:0;bottom:0;height:110px;z-index:1;pointer-events:none}
+.waves svg{position:absolute;bottom:0;width:200%;height:100%}
+.waves .w1{animation:wave 14s linear infinite;opacity:.18}
+.waves .w2{animation:wave 9s linear infinite reverse;opacity:.14}
+.waves .w3{animation:wave 20s linear infinite;opacity:.95}
+@keyframes wave{to{transform:translateX(-50%)}}
+.stage{position:absolute;right:5%;top:46%;transform:translateY(-50%);width:300px;height:420px;perspective:900px;z-index:1;pointer-events:none}
+.bottle{position:absolute;inset:0;margin:auto;width:150px;height:330px;transform-style:preserve-3d;animation:spin3d 16s linear infinite}
+@keyframes spin3d{0%{transform:rotateY(0) rotateX(8deg) translateY(0)}50%{transform:rotateY(180deg) rotateX(8deg) translateY(-18px)}100%{transform:rotateY(360deg) rotateX(8deg) translateY(0)}}
+.bottle i{position:absolute;inset:0;border-radius:24px 24px 16px 16px;border:1px solid rgba(255,255,255,.55);
+  background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,.18) 40%,rgba(14,165,183,.35));
+  box-shadow:inset 0 0 40px rgba(255,255,255,.35),0 40px 70px -30px rgba(3,30,50,.7)}
+.bottle i:nth-child(2){transform:rotateY(90deg);opacity:.7}
+.bottle b{position:absolute;left:50%;top:-34px;width:52px;height:40px;transform:translateX(-50%);border-radius:9px;background:linear-gradient(180deg,#fff,#cbd5e1);box-shadow:0 10px 20px -8px rgba(0,0,0,.4)}
+.bottle u{position:absolute;left:8px;right:8px;top:118px;height:100px;border-radius:12px;background:linear-gradient(135deg,#fff,#dff3fb);text-decoration:none;box-shadow:0 8px 20px -10px rgba(3,30,50,.4)}
+.bubbles{position:absolute;inset:0;overflow:hidden}
+.bubbles span{position:absolute;bottom:-40px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff,rgba(255,255,255,.25));animation:rise linear infinite}
+@keyframes rise{0%{transform:translateY(0) scale(.6);opacity:0}15%{opacity:.9}100%{transform:translateY(-110vh) scale(1.2);opacity:0}}
+.auth-main{display:grid;place-items:center;padding:40px max(20px,env(safe-area-inset-right,0px));position:relative}
+.auth-card{width:min(430px,100%);display:grid;gap:18px;padding:38px 34px;border-radius:28px;background:rgba(255,255,255,.9);border:1px solid #fff;
+  box-shadow:0 1px 0 #fff inset,0 40px 80px -30px rgba(11,37,64,.30),0 0 0 1px var(--line);backdrop-filter:blur(18px);transition:transform .2s ease-out;animation:cardIn .7s cubic-bezier(.2,.8,.3,1)}
+@keyframes cardIn{from{opacity:0;transform:translateY(26px) rotateX(10deg)}to{opacity:1;transform:none}}
+.auth-card::before{content:"";display:block;width:52px;height:52px;border-radius:16px;background:var(--grad);box-shadow:0 14px 28px -12px rgba(2,132,199,.8);
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 52 52'%3E%3Crect width='52' height='52' rx='16'/%3E%3C/svg%3E")}
+.auth-card h2{font-size:32px}
+.auth-card .sub{color:var(--muted);font-size:14.5px;margin-top:-8px}
+.auth-card form{display:grid;gap:15px}
+.msg{border-radius:12px;padding:11px 13px;font-size:13.5px;border:1px solid transparent}
+.msg.err{background:var(--bad-bg);color:#9f1239;border-color:#f8c8d3}
+.msg.ok{background:var(--ok-bg);color:#065f46;border-color:#bce9d6}
+.msg.info{background:#e8f4fb;color:#075985;border-color:#c5e3f3}
+.linkbtn{background:none;border:0;color:var(--aqua);cursor:pointer;padding:0;font-weight:600;font-size:13.5px}
+.linkbtn:hover{text-decoration:underline;text-underline-offset:3px}
+@media (max-width:900px){.auth{grid-template-columns:1fr}.auth-art{padding:26px 20px;min-height:250px}.auth-art .hideable{display:none}.stage{width:160px;height:230px;right:-6px;opacity:.75}.waves{height:80px}}
+
+/* ================= APP SHELL ================= */
+.app{display:grid;grid-template-columns:268px 1fr;min-height:100%}
+.side{display:flex;flex-direction:column;position:sticky;top:0;height:100vh;padding:20px 14px calc(16px + env(safe-area-inset-bottom,0px));
+  background:rgba(255,255,255,.88);border-right:1px solid var(--line);backdrop-filter:blur(20px);z-index:40;overflow:hidden}
+.side::after{content:"";position:absolute;left:-40px;right:-40px;bottom:-60px;height:180px;background:radial-gradient(ellipse at 50% 100%,rgba(6,182,212,.18),transparent 70%);pointer-events:none}
+.side .brand{display:flex;align-items:center;gap:11px;padding:4px 8px 20px;position:relative;z-index:1}
+.side .brand .lg{background:#fff;border-radius:12px;padding:7px 10px;box-shadow:var(--sh2);border:1px solid var(--line)}
+.side .brand img{height:24px;display:block}
+.side .brand small{font:600 9.5px/1.35 var(--mono);letter-spacing:.18em;text-transform:uppercase;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.side nav{display:grid;gap:3px;overflow:auto;flex:1;padding-right:3px;position:relative;z-index:1;align-content:start}
+.side .grp{font:600 9.5px var(--mono);letter-spacing:.2em;text-transform:uppercase;color:#9aabbd;padding:16px 12px 7px}
+.side nav a{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:12px;text-decoration:none;color:var(--fg2);font-size:14px;font-weight:500;
+  transition:transform .18s cubic-bezier(.2,.8,.3,1),background .18s,color .18s,box-shadow .18s}
+.side nav a .ico{color:#8aa0b6;transition:color .18s,transform .18s}
+.side nav a:hover{background:#eef6fb;transform:translateX(4px);color:var(--fg)}
+.side nav a:hover .ico{color:var(--aqua);transform:scale(1.12)}
+.side nav a.on{background:var(--grad);color:#fff;box-shadow:0 12px 24px -12px rgba(2,132,199,.8)}
+.side nav a.on .ico{color:#fff}
+.side .me{position:relative;z-index:1;border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:12px;margin-top:12px;display:grid;gap:10px;box-shadow:var(--sh1)}
+.side .me b{font-weight:600;color:var(--fg);font-size:13.5px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.side .me span{font-size:12px;color:var(--muted);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.main{min-width:0;display:flex;flex-direction:column;background-image:radial-gradient(rgba(11,37,64,.06) 1px,transparent 1.2px);background-size:24px 24px}
+.top{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.78);backdrop-filter:blur(16px) saturate(1.4);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:12px;padding:14px max(28px,env(safe-area-inset-right,0px)) 14px 28px;min-height:68px}
+.top h1{font-size:25px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.top .mode{font:600 10px var(--mono);letter-spacing:.14em;text-transform:uppercase;padding:6px 11px;border-radius:999px;background:var(--ok-bg);color:var(--ok);border:1px solid #bce9d6}
+.top .mode i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);margin-right:7px;box-shadow:0 0 0 3px rgba(16,185,129,.2);animation:pulse 2s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 6px rgba(16,185,129,0)}}
+.menu-btn{display:none}
+.content{padding:28px max(28px,env(safe-area-inset-right,0px)) 64px 28px;display:grid;gap:22px;align-content:start;min-width:0}
+.content>*{animation:viewIn .55s cubic-bezier(.2,.8,.3,1) backwards}
+.content>*:nth-child(2){animation-delay:.07s}.content>*:nth-child(3){animation-delay:.14s}.content>*:nth-child(4){animation-delay:.21s}
+@keyframes viewIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@media (max-width:1000px){
+  .app{grid-template-columns:1fr}
+  .side{position:fixed;inset:0 auto 0 0;width:276px;z-index:60;transform:translateX(-100%);transition:transform .25s cubic-bezier(.2,.8,.3,1);padding-top:calc(20px + env(safe-area-inset-top,0px));background:#fff}
+  .side.open{transform:none;box-shadow:0 0 0 100vmax rgba(11,37,64,.35)}
+  .menu-btn{display:inline-flex}
+  .top{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .content{padding:18px max(16px,env(safe-area-inset-right,0px)) 48px max(16px,env(safe-area-inset-left,0px))}
+}
+@media (max-width:640px){.top .mode{display:none}.top h1{font-size:20px}.top [data-new] span{display:none}}
+
+/* ---- cards / kpis / tables ---- */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0;box-shadow:var(--sh2);overflow:hidden;transition:box-shadow .25s,border-color .25s}
+.card:hover{box-shadow:0 2px 4px rgba(11,37,64,.04),0 26px 50px -22px rgba(11,37,64,.28)}
+.card-h{display:flex;align-items:center;gap:11px;padding:16px 20px;border-bottom:1px solid var(--line);flex-wrap:wrap;background:linear-gradient(180deg,#fff,#fbfdff)}
+.card-h h3{font-family:var(--body);font-weight:700;font-size:15.5px;flex:1;letter-spacing:0}
+.card-b{padding:20px}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+.kpi{--c1:#06b6d4;--c2:#0284c7;position:relative;overflow:hidden;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px 18px 16px;display:grid;gap:6px;min-width:0;
+  box-shadow:var(--sh2);transform-style:preserve-3d;transition:transform .22s cubic-bezier(.2,.8,.3,1),box-shadow .22s}
+.kpi::before{content:"";position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,var(--c1),var(--c2));opacity:.10;transition:transform .4s}
+.kpi::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:linear-gradient(90deg,var(--c1),var(--c2))}
+.kpi:hover{box-shadow:0 30px 50px -24px color-mix(in srgb,var(--c2) 55%,transparent)}
+.kpi:hover::before{transform:scale(1.35)}
+.kpi .ki{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,var(--c1),var(--c2));color:#fff;margin-bottom:6px;
+  box-shadow:0 10px 20px -10px var(--c2);transform:translateZ(24px)}
+.kpi .ki .ico{width:20px;height:20px;color:#fff}
+.kpi span{font:600 10px var(--mono);letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+.kpi b{font:700 26px var(--display);font-variant-numeric:tabular-nums;letter-spacing:-.03em;overflow:hidden;text-overflow:ellipsis;color:var(--fg)}
+.kpi small{color:var(--muted);font-size:12.5px}
+.kpi.k2{--c1:#38bdf8;--c2:#4f46e5}.kpi.k3{--c1:#fbbf24;--c2:#f97316}.kpi.k4{--c1:#a78bfa;--c2:#6d28d9}.kpi.k5{--c1:#34d399;--c2:#059669}
+.kpi.alert{--c1:#fb7185;--c2:#e11d48}
+.kpi.alert b{color:var(--bad)}
+@media (max-width:1250px){.kpis{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:660px){.kpis{grid-template-columns:1fr 1fr}.kpi b{font-size:21px}.kpis .kpi:last-child:nth-child(odd){grid-column:1/-1}}
+.grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:22px}
+@media (max-width:1100px){.grid2{grid-template-columns:1fr}}
+.tw{overflow-x:auto}
+table.t{width:100%;border-collapse:collapse;font-size:13.8px}
+table.t th{font:600 10px var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--muted);text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);background:#f6f9fc;white-space:nowrap;position:sticky;top:0}
+table.t td{padding:12px 14px;border-bottom:1px solid #edf2f7;vertical-align:middle;color:var(--fg2)}
+table.t td b{color:var(--fg)}
+table.t tbody tr{transition:background .15s}
+table.t tbody tr:hover{background:#f0f8fc}
+table.t tfoot td{font-weight:700;background:#f6f9fc;border-bottom:0;color:var(--fg)}
+table.t .acts{text-align:right;white-space:nowrap}
+.empty{padding:46px 18px;text-align:center;color:var(--muted);display:grid;gap:12px;justify-items:center}
+.empty::before{content:"";width:64px;height:64px;border-radius:20px;background:linear-gradient(135deg,#e0f2fe,#ede9fe);box-shadow:inset 0 0 0 1px #dbe7f3}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11.5px;font-weight:600;background:#eef3f8;color:var(--fg2);white-space:nowrap}
+.pill.ok{background:var(--ok-bg);color:var(--ok)}
+.pill.warn{background:var(--warn-bg);color:var(--warn)}
+.pill.bad{background:var(--bad-bg);color:var(--bad)}
+.pill.teal{background:#e0f4f8;color:#0e7490}
+.toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:end}
+.toolbar .field{min-width:150px}
+.toolbar .grow{flex:1;min-width:200px}
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.form-grid .wide{grid-column:1/-1}
+@media (max-width:820px){.form-grid{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.form-grid{grid-template-columns:1fr}}
+
+/* ---- document editor ---- */
+.doc-head{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:16px}
+@media (max-width:900px){.doc-head{grid-template-columns:1fr 1fr}}
+.party-box{font-size:12.5px;color:var(--muted);margin-top:5px;min-height:18px}
+table.lines td{padding:7px 7px}
+table.lines input,table.lines select{padding:8px 9px;font-size:13.5px}
+table.lines .qty,table.lines .rate,table.lines .disc,table.lines .gst{width:92px;text-align:right;font-family:var(--mono)}
+.totals{display:grid;grid-template-columns:1fr 360px;gap:22px;align-items:start}
+@media (max-width:820px){.totals{grid-template-columns:1fr}}
+.sum{display:grid;gap:7px;font-size:14px;padding:18px 20px;border-radius:var(--r2);background:linear-gradient(160deg,#f6fbff,#f3f0ff);border:1px solid var(--line)}
+.sum div{display:flex;justify-content:space-between;gap:12px;color:var(--fg2)}
+.sum div span:last-child{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.sum .grand{border-top:1px dashed var(--line2);padding-top:12px;margin-top:6px;font-size:21px;font-weight:700;color:var(--fg)}
+.sum .grand span:last-child{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.words{font-size:12.5px;color:var(--muted);font-style:italic}
+.stockhint{font:500 11px var(--mono);color:var(--muted);margin-top:4px}
+.stockhint.low{color:var(--bad)}
+
+/* ---- dialog & toast ---- */
+dialog{border:0;border-radius:24px;padding:0;width:min(780px,calc(100% - 22px));max-height:calc(100% - 24px);color:var(--fg);background:var(--surface);
+  box-shadow:0 50px 100px -30px rgba(11,37,64,.45),0 0 0 1px var(--line);animation:dlgIn .3s cubic-bezier(.2,.8,.3,1)}
+@keyframes dlgIn{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:none}}
+dialog::backdrop{background:rgba(15,40,65,.32);backdrop-filter:blur(5px)}
+dialog .dh{display:flex;align-items:center;gap:11px;padding:18px 22px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,#f0f9ff,#f5f3ff)}
+dialog .dh h3{font-size:21px;flex:1}
+dialog .db{padding:22px;overflow:auto;max-height:calc(100vh - 180px)}
+dialog .df{display:flex;justify-content:flex-end;gap:11px;padding:16px 22px;border-top:1px solid var(--line);background:#f8fbfd;flex-wrap:wrap}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:#fff;
+  padding:12px 18px 12px 16px;border-radius:14px;font-weight:600;font-size:13.5px;z-index:200;max-width:calc(100% - 32px);box-shadow:0 24px 44px -18px rgba(11,37,64,.6);
+  border-left:4px solid var(--teal);animation:toastIn .3s cubic-bezier(.2,.8,.3,1)}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,16px)}to{opacity:1;transform:translate(-50%,0)}}
+.toast.err{border-left-color:var(--rose)}
+
+/* ---- chart ---- */
+.chart{position:relative;padding:6px 0 0 44px}
+.chart .ygrid{position:absolute;left:44px;right:0;top:16px;height:190px;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none}
+.chart .ygrid div{border-top:1px dashed #e2e9f1;position:relative}
+.chart .ygrid div span{position:absolute;left:-44px;top:-8px;width:38px;text-align:right;font:500 10px var(--mono);color:#9aabbd}
+.bars{position:relative;display:grid;grid-template-columns:repeat(14,1fr);gap:8px;align-items:end;height:220px;padding-top:16px;perspective:700px}
+.bars .b{display:grid;gap:8px;align-items:end;justify-items:center;height:100%;grid-template-rows:1fr auto;position:relative}
+.bars .b i{display:block;width:100%;max-width:28px;border-radius:9px 9px 4px 4px;min-height:4px;position:relative;
+  background:linear-gradient(180deg,#22d3ee,#0284c7);box-shadow:0 10px 20px -10px rgba(2,132,199,.8);
+  transition:transform .25s cubic-bezier(.2,.8,.3,1),filter .25s;transform-origin:bottom;animation:grow .8s cubic-bezier(.2,.8,.3,1) backwards}
+.bars .b i::after{content:"";position:absolute;inset:0 50% 0 0;border-radius:9px 0 0 4px;background:linear-gradient(90deg,rgba(255,255,255,.35),transparent)}
+@keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.bars .b:hover i{transform:scaleX(1.15) translateY(-3px);filter:saturate(1.3)}
+.bars .b.today i{background:linear-gradient(180deg,#a78bfa,#4f46e5);box-shadow:0 10px 20px -8px rgba(79,70,229,.8)}
+.bars .b em{position:absolute;bottom:calc(var(--h) + 30px);left:50%;transform:translate(-50%,6px);font:600 10.5px var(--mono);font-style:normal;background:var(--fg);color:#fff;padding:4px 7px;border-radius:7px;white-space:nowrap;opacity:0;transition:.18s;pointer-events:none;z-index:2}
+.bars .b:hover em{opacity:1;transform:translate(-50%,0)}
+.bars .b span{font:500 10px var(--mono);color:var(--muted)}
+.list-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #edf2f7;font-size:14px;color:var(--fg2)}
+.list-row:last-child{border-bottom:0}
+.rank{display:grid;gap:14px}
+.rank .r{display:grid;gap:6px}
+.rank .r div{display:flex;justify-content:space-between;gap:10px;font-size:14px}
+.rank .r div b{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.rank .track{height:8px;border-radius:99px;background:#edf3f8;overflow:hidden}
+.rank .track i{display:block;height:100%;border-radius:99px;background:var(--grad);animation:fill .9s cubic-bezier(.2,.8,.3,1) backwards;transform-origin:left}
+@keyframes fill{from{transform:scaleX(0)}}
+.muted{color:var(--muted)}
+.row{display:flex;gap:11px;align-items:center;flex-wrap:wrap}
+.spacer{flex:1}
+.loading-screen{min-height:100vh;display:grid;place-items:center;align-content:center;gap:18px;font:600 11px var(--mono);letter-spacing:.3em;text-transform:uppercase;color:var(--muted)}
+.loading-screen::before{content:"";width:54px;height:54px;border-radius:50%;border:3px solid #dbe9f4;border-top-color:var(--aqua);animation:spin .9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.perm-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:780px){.perm-grid{grid-template-columns:1fr 1fr}}
+.role-card{border:1px solid var(--line);border-radius:16px;padding:14px;font-size:12.5px;display:grid;gap:5px;background:linear-gradient(160deg,#fff,#f6fbff);transition:transform .2s,box-shadow .2s}
+.role-card:hover{transform:translateY(-4px);box-shadow:var(--sh2)}
+.role-card b{font-size:13.5px;color:var(--fg)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="root"><div class="loading-screen">Starting</div></div>
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+<script>window.DEEP_LOGO="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 2090 977%22 width=%222090%22 height=%22977%22%3E%3Cdefs%3E%3ClinearGradient id=%22w%22 x1=%220%22 x2=%221%22 y1=%220%22 y2=%220%22%3E%3Cstop offset=%220%22 stop-color=%22%23023c5e%22/%3E%3Cstop offset=%221%22 stop-color=%22%2305a8d7%22/%3E%3C/linearGradient%3E%3ClinearGradient id=%22d%22 x1=%220%22 x2=%22.6%22 y1=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%2302456e%22/%3E%3Cstop offset=%221%22 stop-color=%22%230396c6%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill=%22%23014163%22 d=%22M45 967C43 964 44 962 50 960C58 957 66 947 69 937C72 927 72 544 69 537C66 531 59 524 50 520C30 509 20 505 14 504C10 503 7 501 9 499C9 499 22 498 36 497C51 496 73 495 84 495C96 494 150 494 204 494C300 494 303 494 332 496C359 499 390 504 399 507C400 508 405 509 408 510C412 510 417 512 420 513C422 514 427 515 429 516C431 517 436 518 438 519C441 521 444 522 445 522C447 522 469 533 478 539C481 541 485 543 487 545C494 549 498 552 511 563C519 570 526 577 528 579C529 581 533 586 537 590C545 600 545 600 549 606C556 616 566 634 566 636C566 637 567 639 568 641C572 649 577 665 578 671C579 674 580 678 580 681C586 697 586 749 581 772C580 777 579 783 578 786C575 802 565 829 557 843C546 862 535 875 517 892C505 903 502 906 494 912C492 913 488 916 485 918C482 921 474 925 468 929C462 932 457 935 456 935C456 935 454 936 453 936C451 937 442 941 432 946C430 947 427 948 426 948C425 948 422 949 418 950C413 953 390 958 376 961C337 969 323 969 173 969C50 969 47 969 45 967ZM1652 968C1648 966 1650 962 1656 959C1661 957 1668 950 1672 943L1675 936L1676 880C1677 849 1677 757 1676 676L1676 528L1673 522C1669 513 1665 508 1657 503C1653 500 1650 497 1651 495C1652 494 1898 494 1910 495C1915 496 1926 497 1935 498C1951 499 1973 504 1984 508C1987 509 1990 510 1991 510C1992 510 1994 511 2011 519C2026 526 2048 543 2056 555C2057 556 2059 558 2061 561C2067 569 2076 587 2079 596C2079 600 2081 605 2082 607C2084 613 2084 651 2082 658C2076 680 2073 689 2067 700C2065 703 2062 707 2061 709C2058 714 2038 735 2031 740C2027 743 2023 746 2022 747C2017 751 1996 762 1993 762C1993 762 1990 763 1988 765C1985 766 1980 768 1977 768C1974 769 1971 770 1969 771C1968 771 1961 774 1953 776C1927 782 1887 784 1832 783C1796 782 1795 783 1793 788C1793 789 1793 822 1793 860L1792 930L1795 937C1798 948 1805 955 1816 961C1820 963 1821 965 1819 968C1818 969 1656 970 1652 968ZM316 930C344 924 371 911 388 896C407 880 410 877 425 854C431 845 438 827 440 819C441 816 442 813 443 812C444 808 449 789 450 779C455 743 452 678 443 657C443 655 441 650 440 646C438 639 435 630 431 622C429 619 428 615 427 614C425 609 415 594 413 592C412 592 411 590 410 588C403 578 380 558 368 552C350 542 345 540 331 535C307 528 292 527 252 527C213 528 197 530 194 535C193 538 192 902 193 910C194 915 201 924 205 924C206 924 208 925 211 927C215 929 217 930 229 931C248 932 306 932 316 930ZM1873 749C1889 747 1909 739 1917 733C1920 731 1925 727 1927 726C1929 724 1934 719 1938 715C1964 684 1971 640 1957 594C1951 572 1941 559 1921 544C1915 540 1902 534 1890 531L1878 528L1844 527C1807 527 1798 527 1795 530L1792 532L1793 639C1793 734 1793 747 1795 748C1797 751 1856 751 1873 749Z%22/%3E%3Cpath fill=%22url%28%23w%29%22 d=%22M1436 610C1434 610 1429 609 1426 609C1422 608 1416 607 1414 606C1405 605 1392 602 1382 598C1379 597 1374 595 1370 594C1360 591 1348 586 1346 585C1346 584 1342 583 1338 582C1332 580 1318 576 1310 572C1308 571 1303 570 1298 569C1293 569 1287 567 1285 566C1271 562 1229 563 1217 567C1214 568 1209 569 1207 570C1201 571 1184 578 1167 588C1165 589 1160 592 1157 595C1154 597 1151 599 1150 599C1148 598 1147 594 1149 593C1149 592 1151 588 1153 585C1156 576 1159 569 1171 553C1177 544 1196 525 1205 518C1207 517 1211 514 1212 513C1214 511 1217 510 1218 509C1220 508 1225 505 1228 503C1232 500 1236 498 1236 498C1237 498 1242 496 1248 493C1254 490 1262 486 1266 486C1270 485 1274 483 1276 482C1281 481 1301 477 1314 475C1326 473 1355 474 1368 477C1393 482 1392 482 1416 490C1423 493 1432 496 1434 497C1439 498 1441 499 1456 505C1463 507 1473 510 1478 510C1483 511 1488 512 1489 513C1494 515 1510 517 1521 517C1538 517 1561 512 1572 505C1584 499 1586 497 1592 492C1602 484 1605 484 1600 494C1599 496 1598 500 1598 501C1598 503 1595 509 1592 516C1589 522 1586 528 1586 529C1586 529 1584 532 1582 535C1580 538 1578 542 1576 544C1571 553 1568 557 1558 566C1538 586 1529 592 1507 602C1490 608 1457 613 1436 610Z%22/%3E%3Cpath fill=%22url%28%23w%29%22 d=%22M959 611C955 610 946 608 940 607C927 605 916 602 904 597C900 596 896 595 894 594C891 594 878 589 869 585C865 583 862 582 861 582C860 582 855 581 850 579C845 577 837 575 833 573C829 572 822 571 817 570C813 569 807 568 803 567C799 566 790 566 778 565C759 565 758 565 741 568C730 570 722 572 719 574C716 575 714 576 713 576C711 576 693 585 685 590C681 592 674 598 670 602C659 613 655 613 659 602C661 598 662 595 662 595C662 594 664 590 671 573C687 536 732 501 782 488C810 481 847 478 874 482C886 484 909 488 912 489C913 490 917 491 920 492C923 492 929 494 933 495C937 497 945 499 951 501C957 503 963 505 965 506C967 507 972 509 977 510C982 511 988 512 991 513C995 514 999 515 1001 516C1004 516 1012 517 1020 519C1040 523 1064 523 1074 520C1078 519 1084 518 1088 518C1092 517 1096 516 1099 514C1102 513 1105 512 1105 512C1106 512 1108 511 1110 509C1116 505 1120 502 1125 500C1127 498 1131 495 1133 493C1137 489 1140 489 1140 493C1140 497 1129 520 1124 527C1121 529 1118 534 1117 536C1115 540 1113 541 1111 541C1109 541 1109 542 1109 545C1109 548 1109 549 1107 550C1106 551 1105 553 1105 553C1105 554 1102 558 1097 562C1093 565 1088 570 1085 573C1083 575 1078 579 1076 581C1071 585 1069 587 1061 592C1059 593 1056 595 1054 596C1049 599 1037 604 1021 608C1008 611 1006 611 987 611C973 612 964 611 959 611Z%22/%3E%3Cpath fill=%22url%28%23w%29%22 d=%22M1397 781C1390 780 1381 778 1377 777C1373 776 1367 774 1363 773C1358 773 1351 770 1346 768C1342 766 1337 764 1336 763C1335 763 1329 761 1323 758C1302 748 1282 740 1269 737C1265 736 1258 734 1253 733C1226 726 1189 727 1169 736C1166 737 1163 738 1161 738C1158 739 1139 749 1134 753C1128 758 1124 756 1128 749C1129 746 1131 741 1133 737C1137 726 1143 717 1148 708C1151 705 1154 700 1155 699C1158 695 1179 674 1182 672C1184 671 1187 670 1188 668C1190 667 1192 666 1192 666C1193 666 1195 665 1197 664C1209 654 1244 644 1268 644C1282 644 1309 648 1320 651C1325 653 1329 654 1330 654C1332 654 1343 658 1354 663C1364 667 1387 678 1393 681C1396 683 1399 684 1400 684C1401 684 1403 685 1405 687C1408 688 1412 690 1416 691C1420 692 1424 694 1426 694C1428 695 1433 697 1438 697C1443 698 1450 700 1454 701C1459 702 1467 703 1480 704C1503 705 1508 707 1504 711C1504 711 1503 713 1503 715C1503 718 1502 719 1499 719C1494 721 1495 724 1501 724C1502 724 1504 726 1507 728C1511 732 1512 732 1517 732C1523 732 1527 734 1531 739C1534 744 1534 746 1531 744C1529 743 1527 742 1525 742C1521 742 1521 742 1521 745L1520 748L1515 748C1510 748 1510 748 1507 751C1505 753 1502 755 1500 755C1495 757 1494 758 1496 763C1498 768 1497 769 1488 771C1484 772 1479 774 1477 775C1463 784 1425 786 1397 781Z%22/%3E%3Cpath fill=%22url%28%23w%29%22 d=%22M938 791C934 790 929 790 928 789C927 789 921 788 914 787C907 785 897 783 892 780C887 778 880 776 877 775C874 774 869 772 865 770C861 768 857 766 854 765C848 762 837 757 830 753C826 752 819 749 816 748C812 746 805 744 801 742C796 740 790 738 786 738C782 737 775 735 770 734C761 732 757 732 736 732C712 732 715 731 692 738C684 740 673 745 671 746C670 747 668 749 666 750C664 750 660 754 656 757C649 763 647 764 645 761C644 760 644 758 647 750C649 745 650 740 650 739C650 738 662 715 666 709C673 697 687 683 697 675C703 671 710 666 712 666C712 666 714 665 715 664C719 661 728 658 751 651C768 646 809 646 829 652C834 653 839 654 840 654C842 654 857 659 864 661C866 662 870 663 873 664C876 665 881 667 885 669C889 671 895 674 900 675C905 677 910 680 912 681C922 685 929 688 933 690C935 690 940 692 944 693C948 695 953 696 955 696C957 697 960 698 961 698C970 703 1012 706 1043 704C1057 703 1057 703 1069 698C1075 695 1082 692 1084 691C1086 691 1091 688 1094 686C1098 683 1103 680 1105 679C1107 678 1109 676 1110 675C1113 672 1117 672 1117 675C1117 678 1110 693 1107 696C1107 697 1105 699 1105 701C1104 705 1100 710 1095 717C1083 733 1078 738 1076 739C1074 740 1073 741 1072 742C1072 744 1057 760 1052 763C1038 772 1012 785 1005 786C1003 786 997 787 992 788C975 792 959 793 938 791Z%22/%3E%3Cpath fill=%22url%28%23w%29%22 d=%22M1376 968C1349 965 1344 965 1340 963C1338 963 1333 961 1329 960C1318 957 1302 952 1278 942C1276 941 1270 939 1266 937C1255 931 1239 925 1234 924C1232 923 1227 921 1224 920C1214 917 1200 913 1193 912C1177 910 1150 911 1141 914C1139 915 1135 917 1133 918C1127 920 1118 925 1115 928C1111 931 1104 934 1103 934C1101 931 1118 901 1128 889C1144 868 1156 856 1162 851C1172 844 1190 834 1191 834C1192 834 1196 833 1200 831C1239 816 1272 819 1328 841C1332 842 1337 844 1340 845C1343 846 1346 848 1347 848C1348 849 1360 854 1370 858C1374 860 1381 862 1385 864C1398 869 1402 870 1426 876C1443 880 1474 880 1494 876C1502 875 1508 873 1509 873C1510 872 1515 871 1519 870C1528 868 1540 863 1543 860C1544 860 1546 858 1549 858C1553 856 1565 849 1575 841C1581 837 1584 836 1584 839C1584 841 1582 846 1577 856C1576 858 1574 863 1573 866C1565 883 1547 907 1530 923C1524 929 1509 940 1500 945C1496 947 1492 950 1491 951C1487 954 1455 965 1446 966C1417 970 1395 971 1376 968Z%22/%3E%3Cpath fill=%22url%28%23w%29%22 d=%22M886 967C865 964 854 961 822 949C803 942 799 940 795 938C793 937 790 936 790 936C789 936 786 935 784 934C781 933 777 931 774 930C770 929 765 927 762 926C744 920 734 919 711 919L690 919L678 922C657 928 640 937 633 946C632 947 629 950 627 951C624 953 624 953 623 952C621 950 622 949 624 942C625 938 626 932 627 929C628 926 629 921 630 919C637 903 639 900 649 885C654 877 675 855 680 852C682 851 684 850 685 850C691 845 710 837 727 832L740 829L764 829C789 828 802 830 818 836C820 836 825 838 829 839C832 840 836 842 838 842C840 843 844 845 846 846C855 849 864 853 867 855C868 856 870 857 870 857C871 857 876 859 881 862C894 867 914 875 920 876C922 876 927 878 930 879C944 884 988 886 1012 883C1023 882 1043 876 1050 873C1052 872 1055 871 1058 871C1061 870 1066 868 1074 862C1076 861 1078 860 1079 859C1081 859 1087 855 1092 851C1106 842 1108 842 1102 854C1100 857 1098 860 1097 862C1096 863 1094 866 1093 868C1092 870 1089 875 1088 877C1086 879 1083 883 1082 885C1080 887 1077 891 1075 893C1072 895 1068 901 1064 905C1054 918 1034 935 1023 941C1020 943 1015 945 1013 947C1003 954 980 963 968 965C943 969 911 970 886 967Z%22/%3E%3Cpath fill=%22url%28%23d%29%22 d=%22M1089 385C1085 384 1079 382 1078 381C1076 381 1072 379 1070 378C1052 372 1031 355 1019 337C1012 327 1010 323 1010 322C1010 321 1009 319 1008 316C994 289 993 237 1007 208C1008 205 1009 202 1009 202C1009 201 1010 198 1011 195C1013 193 1015 188 1016 186C1021 176 1037 147 1046 134C1049 128 1055 120 1071 94C1072 91 1075 86 1076 84C1078 82 1081 77 1082 74C1094 55 1113 17 1113 13C1113 12 1114 10 1115 9C1118 7 1120 8 1122 14C1124 20 1131 34 1137 46C1139 53 1143 59 1143 61C1144 63 1147 67 1148 70C1150 73 1153 77 1154 80C1156 84 1169 105 1175 113C1176 114 1180 121 1184 129C1189 136 1195 145 1197 148C1200 152 1202 155 1202 156C1202 156 1203 158 1205 160C1208 164 1209 166 1218 182C1221 188 1225 197 1226 200C1227 204 1229 208 1229 209C1230 210 1233 221 1236 235C1238 248 1237 278 1234 288C1232 293 1231 298 1231 300C1230 301 1229 304 1227 306C1226 307 1225 311 1224 313C1224 316 1222 318 1217 324L1211 330L1209 328C1205 325 1203 325 1201 329C1199 332 1195 335 1194 334C1194 334 1195 332 1195 329C1196 325 1196 325 1194 322C1192 319 1192 318 1194 314C1195 310 1194 307 1191 307C1188 308 1188 304 1190 292C1192 282 1191 264 1188 255C1185 245 1181 235 1178 226C1177 222 1174 216 1173 212C1171 206 1166 201 1165 203C1164 203 1165 209 1165 216C1166 229 1164 248 1160 255C1159 257 1158 260 1158 261C1158 262 1157 265 1155 268C1153 271 1152 274 1152 275C1152 276 1150 280 1146 283C1143 287 1141 291 1141 292C1141 294 1138 299 1128 308C1112 324 1107 349 1116 367C1117 370 1118 372 1118 373C1118 373 1119 375 1121 377C1125 381 1126 384 1125 386C1123 388 1100 387 1089 385Z%22/%3E%3Cpath fill=%22%2306a8db%22 fill-opacity=%22.85%22 d=%22M1094 385C1094 384 1093 382 1092 381C1091 379 1090 378 1088 377C1084 376 1059 364 1057 362C1056 361 1055 357 1055 354C1053 338 1052 340 1058 334C1060 331 1064 327 1065 326C1067 325 1069 322 1070 320C1071 317 1074 313 1076 311C1078 309 1080 305 1081 303C1083 300 1087 297 1097 291C1100 289 1105 285 1108 281C1115 272 1117 272 1119 277C1120 280 1120 280 1122 280C1130 279 1130 279 1129 283C1128 294 1140 282 1146 266C1150 256 1160 249 1160 258C1160 262 1152 275 1145 283C1140 288 1138 292 1137 295C1136 298 1134 301 1131 304C1128 307 1125 312 1124 315C1120 325 1117 330 1112 333C1107 335 1107 335 1106 347C1106 359 1107 361 1111 362C1117 364 1118 368 1112 374C1110 376 1109 380 1108 381C1108 383 1107 385 1106 385C1103 386 1095 386 1094 385ZM1151 368C1149 368 1146 367 1143 366C1138 366 1136 364 1136 361C1137 359 1147 356 1156 356L1163 356L1165 352C1166 349 1168 346 1169 344C1174 338 1185 322 1188 316C1189 312 1190 307 1191 302C1192 297 1192 291 1193 289C1194 284 1194 265 1193 260C1192 258 1191 253 1191 249C1189 241 1187 237 1184 237C1181 237 1180 233 1180 227C1181 224 1181 220 1180 217C1179 214 1179 211 1178 209C1178 206 1175 205 1170 207C1161 210 1158 204 1162 191C1163 188 1164 184 1164 182C1164 178 1164 178 1165 179C1168 181 1172 180 1177 175C1182 170 1189 166 1193 166C1196 166 1202 171 1204 175C1206 179 1212 188 1216 193C1219 198 1225 210 1227 216C1228 219 1229 221 1231 222C1237 225 1237 228 1237 252L1236 272L1232 282C1229 288 1227 294 1226 298C1225 308 1220 316 1213 324C1210 327 1205 334 1202 338C1199 343 1195 347 1192 349C1189 351 1185 354 1183 356C1173 362 1159 370 1156 370C1155 370 1153 369 1151 368Z%22/%3E%3C/svg%3E";</script>
+<script>
+/* ===================================================================
+   DEEP Aqua Business Suite — Supabase only
+   ① Create a Supabase project  ② run supabase-setup.sql in SQL Editor
+   ③ put the two values in config.js (Project Settings → API)
+   =================================================================== */
+'use strict';
+/* ====== PASTE YOUR KEY HERE (used when config.js is missing or not filled) ====== */
+const INLINE_CONFIG = {
+  SUPABASE_URL: 'https://vjykmialewcqqghwjgwo.supabase.co',
+  SUPABASE_ANON_KEY: 'PASTE-YOUR-ANON-KEY-HERE'   // ← Supabase → Settings → API Keys → anon public → Copy
+};
+/* ================================================================================= */
+const isFilled=c=>!!(c&&c.SUPABASE_URL&&c.SUPABASE_ANON_KEY&&!/YOUR-PROJECT-ID|PASTE-YOUR/.test(c.SUPABASE_URL+c.SUPABASE_ANON_KEY));
+const CFG_SOURCE=isFilled(window.DEEP_CONFIG)?'config.js':isFilled(INLINE_CONFIG)?'index.html':(window.DEEP_CONFIG?'config.js (still has placeholder text)':'nothing — config.js did not load and index.html has no key');
+const CFG=isFilled(window.DEEP_CONFIG)?window.DEEP_CONFIG:INLINE_CONFIG;
+const SUPABASE_URL      = (CFG.SUPABASE_URL||'').trim().replace(/\/$/,'');
+const SUPABASE_ANON_KEY = (CFG.SUPABASE_ANON_KEY||'').trim();
+
+const TABLES=['company','brands','products','customers','suppliers','sales','sales_returns','purchases','purchase_returns','wastage','receipts'];
+const ROLES={
+  admin:{name:'Admin',desc:'Everything, including users, company settings and deleting records.'},
+  manager:{name:'Manager',desc:'All billing, stock, masters and reports. Cannot manage users.'},
+  accounts:{name:'Accounts',desc:'Invoices, returns, receipts, purchases and all reports.'},
+  sales:{name:'Sales',desc:'Customers, invoices, sales returns, receipts and sales reports.'},
+  store:{name:'Store',desc:'Products, inward, purchase returns, wastage and stock.'},
+  distributor:{name:'Distributor',desc:'Own invoices, statement and price list only.'},
+  agency:{name:'Agency',desc:'Own invoices, statement and price list only.'},
+  pending:{name:'Waiting for approval',desc:'Account exists; an Admin must give a role.'}
+};
+const STAFF=['admin','manager','accounts','sales','store'];
+const VIEWS=[
+  {g:'Overview',id:'dashboard',name:'Dashboard',icon:'M3 13h8V3H3zM13 21h8v-8h-8zM13 3v6h8V3zM3 21h8v-4H3z',roles:STAFF},
+  {g:'Overview',id:'portal',name:'My account',icon:'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z',roles:['distributor','agency']},
+  {g:'Billing',id:'sales',name:'Sales invoices',icon:'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h5',roles:['admin','manager','accounts','sales']},
+  {g:'Billing',id:'sales_returns',name:'Sales returns',icon:'M9 14 4 9l5-5M4 9h11a5 5 0 0 1 0 10h-3',roles:['admin','manager','accounts','sales']},
+  {g:'Billing',id:'receipts',name:'Payments received',icon:'M2 7h20v12H2zM2 11h20M6 15h4',roles:['admin','manager','accounts','sales']},
+  {g:'Stock',id:'purchases',name:'Inward (purchase)',icon:'M21 16V8l-9-5-9 5v8l9 5zM3.3 7 12 12l8.7-5M12 22V12',roles:['admin','manager','accounts','store']},
+  {g:'Stock',id:'purchase_returns',name:'Purchase returns',icon:'M15 14l5-5-5-5M20 9H9a5 5 0 0 0 0 10h3',roles:['admin','manager','accounts','store']},
+  {g:'Stock',id:'wastage',name:'Wastage / damage',icon:'M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6',roles:['admin','manager','store']},
+  {g:'Stock',id:'stock',name:'Stock summary',icon:'M4 20V10M10 20V4M16 20v-7M22 20H2',roles:STAFF},
+  {g:'Masters',id:'products',name:'Products',icon:'M7 3h10l2 5v13H5V8zM5 8h14M10 12h4',roles:STAFF},
+  {g:'Masters',id:'brands',name:'Brands',icon:'M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8zM7.5 7.5h.01',roles:STAFF},
+  {g:'Masters',id:'customers',name:'Customers',icon:'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8',roles:['admin','manager','accounts','sales']},
+  {g:'Masters',id:'suppliers',name:'Suppliers',icon:'M1 3h15v13H1zM16 8h4l3 3v5h-7zM5.5 21a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM18.5 21a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z',roles:['admin','manager','accounts','store']},
+  {g:'Insights',id:'reports',name:'Reports',icon:'M3 3v18h18M7 15l4-4 3 3 5-6',roles:STAFF},
+  {g:'Admin',id:'company',name:'Company & emails',icon:'M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6',roles:['admin','manager']},
+  {g:'Admin',id:'users',name:'Users & roles',icon:'M16 11a4 4 0 1 0-8 0 4 4 0 0 0 8 0zM4 21v-1a6 6 0 0 1 12 0v1M19 8v6M22 11h-6',roles:['admin']},
+  {g:'Admin',id:'data',name:'Backup & data',icon:'M12 3c4.4 0 8 1.3 8 3s-3.6 3-8 3-8-1.3-8-3 3.6-3 8-3zM4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6',roles:['admin']}
+];
+const DOCS={
+  sales:{title:'Sales invoice',plural:'Sales invoices',code:'INV',party:'customer',rate:'rate',tax:true,sign:-1,pdf:'TAX INVOICE',refLabel:'Order / PO ref.'},
+  sales_returns:{title:'Sales return',plural:'Sales returns',code:'SR',party:'customer',rate:'rate',tax:true,sign:1,pdf:'CREDIT NOTE — SALES RETURN',refLabel:'Against invoice no.'},
+  purchases:{title:'Inward (purchase)',plural:'Inward entries',code:'GRN',party:'supplier',rate:'cost',tax:true,sign:1,pdf:'GOODS RECEIPT NOTE — INWARD',refLabel:'Supplier bill no.'},
+  purchase_returns:{title:'Purchase return',plural:'Purchase returns',code:'PR',party:'supplier',rate:'cost',tax:true,sign:-1,pdf:'DEBIT NOTE — PURCHASE RETURN',refLabel:'Against bill no.'},
+  wastage:{title:'Wastage / damage',plural:'Wastage entries',code:'WST',party:null,rate:'cost',tax:false,sign:-1,pdf:'WASTAGE / DAMAGE NOTE',refLabel:'Reason'}
+};
+const STATES=[['Jammu and Kashmir','01'],['Himachal Pradesh','02'],['Punjab','03'],['Chandigarh','04'],['Uttarakhand','05'],['Haryana','06'],['Delhi','07'],['Rajasthan','08'],['Uttar Pradesh','09'],['Bihar','10'],['Sikkim','11'],['Arunachal Pradesh','12'],['Nagaland','13'],['Manipur','14'],['Mizoram','15'],['Tripura','16'],['Meghalaya','17'],['Assam','18'],['West Bengal','19'],['Jharkhand','20'],['Odisha','21'],['Chhattisgarh','22'],['Madhya Pradesh','23'],['Gujarat','24'],['Dadra and Nagar Haveli and Daman and Diu','26'],['Maharashtra','27'],['Karnataka','29'],['Goa','30'],['Lakshadweep','31'],['Kerala','32'],['Tamil Nadu','33'],['Puducherry','34'],['Andaman and Nicobar Islands','35'],['Telangana','36'],['Andhra Pradesh','37'],['Ladakh','38']];
+const stateCode=s=>(STATES.find(x=>x[0]===s)||[])[1]||'';
+const CUST_TYPES=['Distributor','Agency','Retailer','Supermarket','Hotel / Resort','Restaurant / Café','Corporate','Event / Wedding','Institution','Other'];
+const DEPT=[['email_general','General'],['email_sales','Sales'],['email_support','Support'],['email_purchase','Procurement'],['email_admin','Management']];
+
+/* ---------------- helpers ---------------- */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const r2=n=>Math.round((+n||0)*100)/100;
+const inr=n=>'₹'+(+n||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+const inr0=n=>'₹'+Math.round(+n||0).toLocaleString('en-IN');
+const qtyf=n=>(+n||0).toLocaleString('en-IN',{maximumFractionDigits:3});
+const today=()=>{const d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)};
+const dfmt=s=>s?new Date(s+'T00:00:00').toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}):'';
+const uid=()=>crypto.randomUUID?crypto.randomUUID():'id'+Date.now().toString(36)+Math.random().toString(36).slice(2);
+const fy=d=>{const t=new Date(d+'T00:00:00');const y=t.getFullYear(),m=t.getMonth()+1;const s=m>=4?y:y-1;return String(s%100).padStart(2,'0')+'-'+String((s+1)%100).padStart(2,'0')};
+function icon(p){return `<svg class="ico" viewBox="0 0 24 24"><path d="${p}"/></svg>`}
+function toast(t,err){const d=document.createElement('div');d.className='toast'+(err?' err':'');d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),err?4200:2400)}
+function words(num){
+  num=Math.round(+num||0);if(num===0)return 'Zero';
+  const a=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
+  const b=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+  const two=n=>n<20?a[n]:b[Math.floor(n/10)]+(n%10?' '+a[n%10]:'');
+  const three=n=>(n>=100?a[Math.floor(n/100)]+' Hundred'+(n%100?' ':''):'')+(n%100?two(n%100):'');
+  let out=[];const cr=Math.floor(num/1e7);num%=1e7;const l=Math.floor(num/1e5);num%=1e5;const th=Math.floor(num/1e3);num%=1e3;
+  if(cr)out.push(three(cr)+' Crore');if(l)out.push(two(l)+' Lakh');if(th)out.push(two(th)+' Thousand');if(num)out.push(three(num));
+  return out.join(' ');
+}
+const amountWords=n=>'Rupees '+words(n)+' Only';
+function download(name,content,type){const blob=content instanceof Blob?content:new Blob([content],{type:type||'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+function csv(rows){return rows.map(r=>r.map(v=>{v=String(v??'');return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}).join(',')).join('\n')}
+/* 3D pointer tilt */
+function tilt(el,max){max=max||9;
+  el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+    el.style.transform=`perspective(900px) rotateX(${(-y*max).toFixed(2)}deg) rotateY(${(x*max).toFixed(2)}deg) translateZ(6px)`});
+  el.addEventListener('pointerleave',()=>{el.style.transform=''});
+}
+
+/* ---------------- Supabase layer ---------------- */
+const DB={
+  async init(url,key){
+    if(!window.supabase)throw new Error('The Supabase library did not load. Check the internet connection.');
+    if(!url||!key||/YOUR-PROJECT-ID|PASTE-YOUR/.test(url+key))throw new Error('No Supabase key found. Settings read from: '+CFG_SOURCE+'.');
+    this.c=window.supabase.createClient(url,key,{auth:{persistSession:true,storageKey:'deep_erp_auth'}});
+  },
+  chk(r){if(r.error)throw new Error(r.error.message);return r.data},
+  async list(t){let out=[],from=0;for(;;){const d=this.chk(await this.c.from(t).select('id,data,created_at,updated_at').order('created_at').range(from,from+999));out=out.concat(d);if(d.length<1000)break;from+=1000}return out},
+  async insert(t,data){return this.chk(await this.c.from(t).insert({data}).select('id,data,created_at').single())},
+  async update(t,id,data){return this.chk(await this.c.from(t).update({data}).eq('id',id).select('id,data,created_at,updated_at').single())},
+  async remove(t,id){this.chk(await this.c.from(t).delete().eq('id',id))},
+  async profileFor(user){let p=this.chk(await this.c.from('profiles').select('*').eq('id',user.id).maybeSingle());if(!p)p={id:user.id,email:user.email,name:user.email,role:'pending',active:true};return p},
+  async signIn(email,password){const d=this.chk(await this.c.auth.signInWithPassword({email:email.trim(),password}));return this.profileFor(d.user)},
+  async session(){const {data}=await this.c.auth.getSession();return data.session?this.profileFor(data.session.user):null},
+  async signOut(){await this.c.auth.signOut()},
+  async profiles(){return this.chk(await this.c.from('profiles').select('*').order('created_at'))},
+  async updateProfile(id,patch){this.chk(await this.c.from('profiles').update(patch).eq('id',id))},
+  async resetPassword(email){this.chk(await this.c.auth.resetPasswordForEmail(email.trim(),{redirectTo:location.href.split('#')[0]}))}
+};
+
+/* ---------------- app state ---------------- */
+const S={user:null,view:'dashboard',data:{},company:{},companyId:null,logoPng:null};
+const rec=r=>({id:r.id,...r.data,_created:r.created_at});
+const T=t=>S.data[t]||[];
+const byId=(t,id)=>T(t).find(x=>x.id===id);
+const can=v=>{const view=VIEWS.find(x=>x.id===v);return !!view&&view.roles.includes(S.user.role)};
+const canEdit=()=>['admin','manager'].includes(S.user.role);
+const canWrite=v=>can(v)&&!['distributor','agency','pending'].includes(S.user.role);
+function defaultCompany(){return {name:'DEEP Aqua',legal:'LST Private Limited',gstin:'',state:'Tamil Nadu',address:'Salem, Tamil Nadu 636 001, India',phone:'',email_general:'info@deepaqua.in',email_sales:'sales@deepaqua.in',email_support:'support@deepaqua.in',email_purchase:'purchase@deepaqua.in',email_admin:'admin@deepaqua.in',website:'www.deepaqua.in',bank:'',account:'',ifsc:'',prefix:'DA',terms:'Goods once sold will be taken back only as per return policy. Subject to Salem jurisdiction.'}}
+async function loadAll(){
+  const tabs=S.user&&['distributor','agency'].includes(S.user.role)?['company','brands','products','customers','sales','sales_returns','receipts']:TABLES;
+  const res=await Promise.all(tabs.map(t=>DB.list(t).catch(e=>{console.warn(t,e);return []})));
+  TABLES.forEach(t=>S.data[t]=[]);tabs.forEach((t,i)=>S.data[t]=res[i].map(rec));
+  const c=T('company')[0];S.companyId=c?c.id:null;S.company=c||defaultCompany();
+}
+async function save(t,obj){
+  const {id,_created,...data}=obj;
+  if(id){const r=await DB.update(t,id,data);const i=T(t).findIndex(x=>x.id===id);S.data[t][i]=rec(r);return S.data[t][i]}
+  const r=await DB.insert(t,data);S.data[t].push(rec(r));return rec(r);
+}
+async function del(t,id){await DB.remove(t,id);S.data[t]=T(t).filter(x=>x.id!==id)}
+
+/* ---------------- business logic ---------------- */
+function stockOf(pid,upto){
+  const p=byId('products',pid);let q=+(p&&p.opening)||0;
+  for(const t of ['purchases','purchase_returns','sales','sales_returns','wastage']){
+    const sign=DOCS[t].sign;
+    for(const d of T(t)){if(upto&&d.date>upto)continue;for(const l of d.items||[])if(l.product_id===pid)q+=sign*(+l.qty||0)}
+  }
+  return q;
+}
+function custBalance(cid){
+  const c=byId('customers',cid);let b=+(c&&c.opening)||0;
+  T('sales').forEach(d=>{if(d.customer_id===cid)b+=+d.total||0});
+  T('sales_returns').forEach(d=>{if(d.customer_id===cid)b-=+d.total||0});
+  T('receipts').forEach(d=>{if(d.customer_id===cid)b-=+d.amount||0});
+  return r2(b);
+}
+function nextNo(t,date){
+  const code=t==='receipts'?'RCT':DOCS[t].code;const pre=`${S.company.prefix||'DA'}/${code}/${fy(date)}/`;
+  let max=0;T(t).forEach(d=>{if((d.no||'').startsWith(pre)){const n=parseInt(d.no.slice(pre.length),10);if(n>max)max=n}});
+  return pre+String(max+1).padStart(4,'0');
+}
+function calcDoc(doc,type){
+  const cfg=DOCS[type];const party=cfg.party==='customer'?byId('customers',doc.customer_id):cfg.party==='supplier'?byId('suppliers',doc.supplier_id):null;
+  const inter=!!(cfg.tax&&party&&party.state&&S.company.state&&party.state!==S.company.state);
+  let taxable=0,tax=0;
+  doc.items=(doc.items||[]).filter(l=>l.product_id).map(l=>{
+    const qty=+l.qty||0,rate=+l.rate||0,disc=+l.disc||0,gst=cfg.tax?(+l.gst||0):0;
+    const tx=r2(qty*rate*(1-disc/100)),tt=r2(tx*gst/100);taxable+=tx;tax+=tt;
+    return {...l,qty,rate,disc,gst,taxable:tx,tax:tt,total:r2(tx+tt)};
+  });
+  taxable=r2(taxable);tax=r2(tax);
+  doc.interstate=inter;doc.taxable=taxable;doc.igst=inter?tax:0;doc.cgst=inter?0:r2(tax/2);doc.sgst=inter?0:r2(tax-r2(tax/2));
+  const g=taxable+tax;doc.roundoff=cfg.tax?r2(Math.round(g)-g):0;doc.total=r2(g+doc.roundoff);
+  doc.qty=doc.items.reduce((a,l)=>a+l.qty,0);
+  if(party){doc.party_name=party.name;doc.party_gstin=party.gstin||'';doc.party_state=party.state||'';doc.party_address=party.address||'';doc.party_phone=party.phone||''}
+  return doc;
+}
+const inRange=(d,f,t)=>(!f||d>=f)&&(!t||d<=t);
+
+/* ---------------- logo for PDFs ---------------- */
+async function prepLogo(){
+  const src=S.company.logo||window.DEEP_LOGO;if(!src)return;
+  await new Promise(res=>{const im=new Image();im.onload=()=>{const w=900,h=Math.round(w*im.height/im.width);const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,w,h);x.drawImage(im,0,0,w,h);S.logoPng={data:c.toDataURL('image/jpeg',.92),ar:h/w,fmt:'JPEG'};res()};im.onerror=res;im.src=src});
+}
+
+/* ---------------- PDF (printed documents stay light) ---------------- */
+function pdfHeader(doc,title,sub){
+  const C=S.company,W=210;let y=14;
+  if(S.logoPng){const lw=38;doc.addImage(S.logoPng.data,'JPEG',14,y,lw,lw*S.logoPng.ar)}
+  doc.setFont('helvetica','bold');doc.setFontSize(15);doc.setTextColor(6,59,91);doc.text(C.name||'DEEP Aqua',W-14,y+4,{align:'right'});
+  doc.setFont('helvetica','normal');doc.setFontSize(8.6);doc.setTextColor(60,72,82);
+  const lines=[C.legal,C.address,[C.gstin?'GSTIN: '+C.gstin:'',C.state?'State: '+C.state+' ('+stateCode(C.state)+')':''].filter(Boolean).join('   '),[C.phone?'Ph: '+C.phone:'',C.email_sales||C.email_general,C.website].filter(Boolean).join('  ·  ')].filter(Boolean);
+  lines.forEach((l,i)=>doc.text(String(l),W-14,y+9+i*4,{align:'right'}));
+  y=Math.max(y+9+lines.length*4,y+(S.logoPng?38*S.logoPng.ar:0))+4;
+  doc.setDrawColor(6,59,91);doc.setLineWidth(.6);doc.line(14,y,W-14,y);
+  y+=7;doc.setFont('helvetica','bold');doc.setFontSize(12);doc.setTextColor(6,59,91);doc.text(title,W/2,y,{align:'center'});
+  if(sub){doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(110);doc.text(sub,W-14,y,{align:'right'})}
+  return y+5;
+}
+function pdfFooter(doc){
+  const C=S.company,n=doc.getNumberOfPages();
+  for(let i=1;i<=n;i++){doc.setPage(i);doc.setFontSize(7.2);doc.setTextColor(120);doc.setFont('helvetica','normal');
+    doc.text(DEPT.map(([k,l])=>C[k]?l+': '+C[k]:'').filter(Boolean).join('   '),105,286,{align:'center'});
+    doc.text('Page '+i+' of '+n,doc.internal.pageSize.getWidth()-14,291,{align:'right'})}
+}
+const rs=n=>'Rs. '+(+n||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+function docPdf(type,d,action){
+  const {jsPDF}=window.jspdf;const doc=new jsPDF({unit:'mm',format:'a4'});const cfg=DOCS[type];const C=S.company;
+  let y=pdfHeader(doc,cfg.pdf,type==='sales'?'Original for recipient':'');
+  doc.setDrawColor(214,208,195);doc.setLineWidth(.25);doc.rect(14,y,110,30);doc.rect(124,y,72,30);
+  doc.setFontSize(7.5);doc.setTextColor(110);doc.setFont('helvetica','bold');
+  doc.text(cfg.party==='supplier'?'SUPPLIER':cfg.party?'BILL TO':'DETAILS',17,y+5);
+  doc.setTextColor(20);doc.setFontSize(10);doc.text(String(d.party_name||(cfg.party?'':'Internal stock adjustment')),17,y+10.5);
+  doc.setFont('helvetica','normal');doc.setFontSize(8.3);
+  const pl=doc.splitTextToSize(String(d.party_address||''),104).slice(0,2);pl.forEach((l,i)=>doc.text(l,17,y+15+i*3.8));
+  const pg=[d.party_gstin?'GSTIN: '+d.party_gstin:'',d.party_state?'State: '+d.party_state+' ('+stateCode(d.party_state)+')':''].filter(Boolean).join('   ');doc.text(pg,17,y+24);
+  if(d.party_phone)doc.text('Ph: '+d.party_phone,17,y+28);
+  const kv=[['No.',d.no],['Date',dfmt(d.date)],[cfg.party==='customer'?'Place of supply':'State',(d.party_state||C.state||'')+(d.party_state||C.state?' ('+stateCode(d.party_state||C.state)+')':'')],[cfg.refLabel,d.ref||d.reason||'—']];
+  kv.forEach(([k,v],i)=>{doc.setTextColor(110);doc.setFontSize(7.5);doc.text(k,127,y+6+i*6.4);doc.setTextColor(20);doc.setFontSize(8.8);doc.text(String(v||''),193,y+6+i*6.4,{align:'right'})});
+  y+=34;
+  const head=cfg.tax?[['#','Description','HSN','Qty','Rate','Disc %','Taxable','GST %','GST amt','Amount']]:[['#','Description','Qty','Cost','Value']];
+  const body=(d.items||[]).map((l,i)=>cfg.tax?[i+1,l.name,l.hsn||'',qtyf(l.qty),r2(l.rate).toFixed(2),l.disc?r2(l.disc):'',l.taxable.toFixed(2),r2(l.gst),l.tax.toFixed(2),l.total.toFixed(2)]:[i+1,l.name,qtyf(l.qty),r2(l.rate).toFixed(2),l.total.toFixed(2)]);
+  doc.autoTable({startY:y,head,body,theme:'grid',styles:{fontSize:8.3,cellPadding:1.8,lineColor:[214,208,195],lineWidth:.2,textColor:20},headStyles:{fillColor:[6,59,91],textColor:255,fontStyle:'bold',fontSize:7.8},
+    columnStyles:cfg.tax?{0:{cellWidth:7},1:{cellWidth:'auto'},2:{cellWidth:14},3:{halign:'right',cellWidth:13},4:{halign:'right',cellWidth:16},5:{halign:'right',cellWidth:12},6:{halign:'right',cellWidth:20},7:{halign:'right',cellWidth:11},8:{halign:'right',cellWidth:17},9:{halign:'right',cellWidth:21}}:{0:{cellWidth:8},2:{halign:'right'},3:{halign:'right'},4:{halign:'right'}},margin:{left:14,right:14}});
+  y=doc.lastAutoTable.finalY+4;
+  if(y>230){doc.addPage();y=20}
+  if(cfg.tax){
+    const g={};(d.items||[]).forEach(l=>{const k=(l.hsn||'-')+'|'+l.gst;g[k]=g[k]||{hsn:l.hsn||'-',gst:l.gst,tx:0,tax:0};g[k].tx+=l.taxable;g[k].tax+=l.tax});
+    const rows=Object.values(g).map(v=>d.interstate?[v.hsn,v.gst+'%',v.tx.toFixed(2),'','',r2(v.tax).toFixed(2)]:[v.hsn,v.gst+'%',v.tx.toFixed(2),r2(v.tax/2).toFixed(2),r2(v.tax-r2(v.tax/2)).toFixed(2),'']);
+    doc.autoTable({startY:y,head:[['HSN','Rate','Taxable','CGST','SGST','IGST']],body:rows,theme:'grid',tableWidth:104,margin:{left:14},styles:{fontSize:7.6,cellPadding:1.4,lineColor:[214,208,195],lineWidth:.2,halign:'right'},headStyles:{fillColor:[240,236,227],textColor:60,fontStyle:'bold'},columnStyles:{0:{halign:'left'}}});
+  }
+  const tot=cfg.tax?[['Taxable value',rs(d.taxable)],...(d.interstate?[['IGST',rs(d.igst)]]:[['CGST',rs(d.cgst)],['SGST',rs(d.sgst)]]),['Round off',rs(d.roundoff)]]:[];
+  let ty=y+1;doc.setFontSize(8.8);
+  tot.forEach(([k,v])=>{doc.setTextColor(90);doc.text(k,130,ty+3.5);doc.setTextColor(20);doc.text(v,196,ty+3.5,{align:'right'});ty+=5.4});
+  doc.setFillColor(6,59,91);doc.rect(126,ty,70,9,'F');doc.setTextColor(255);doc.setFont('helvetica','bold');doc.setFontSize(10.5);doc.text(type==='wastage'?'Total value':'Grand total',129,ty+6);doc.text(rs(d.total),193,ty+6,{align:'right'});
+  y=Math.max(cfg.tax?doc.lastAutoTable.finalY:y,ty+9)+6;
+  doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.setTextColor(20);doc.text('Amount in words:',14,y);doc.setFont('helvetica','normal');
+  doc.text(doc.splitTextToSize(amountWords(d.total),150),42,y);y+=8;
+  if(d.notes){doc.setTextColor(90);doc.text(doc.splitTextToSize('Notes: '+d.notes,182),14,y);y+=8}
+  if(type==='sales'&&(C.bank||C.account)){doc.setFont('helvetica','bold');doc.setTextColor(20);doc.text('Bank details',14,y);doc.setFont('helvetica','normal');doc.text([C.bank,C.account?'A/c: '+C.account:'',C.ifsc?'IFSC: '+C.ifsc:''].filter(Boolean).join('   '),14,y+4.5);y+=10}
+  if(type==='sales'&&C.terms){doc.setFontSize(7.6);doc.setTextColor(110);doc.text(doc.splitTextToSize('Terms: '+C.terms,110),14,y)}
+  const sy=Math.max(y,250);doc.setFontSize(8.5);doc.setTextColor(20);doc.setFont('helvetica','bold');doc.text('For '+(C.name||'DEEP Aqua'),196,sy,{align:'right'});
+  doc.setFont('helvetica','normal');doc.setTextColor(110);doc.text('Authorised signatory',196,sy+14,{align:'right'});
+  pdfFooter(doc);
+  const name=(d.no||'document').replace(/\//g,'-')+'.pdf';
+  if(action==='open'){window.open(doc.output('bloburl'),'_blank')||download(name,doc.output('blob'))}else download(name,doc.output('blob'));
+}
+function receiptPdf(r){
+  const {jsPDF}=window.jspdf;const doc=new jsPDF({unit:'mm',format:'a4'});let y=pdfHeader(doc,'PAYMENT RECEIPT','');
+  const c=byId('customers',r.customer_id)||{};
+  const rows=[['Receipt no.',r.no],['Date',dfmt(r.date)],['Received from',c.name||r.party_name||''],['Amount',rs(r.amount)],['In words',amountWords(r.amount)],['Mode',r.mode||''],['Reference',r.ref||''],['Against',r.against||'On account'],['Notes',r.notes||'']];
+  doc.autoTable({startY:y+2,body:rows,theme:'grid',styles:{fontSize:10,cellPadding:3,lineColor:[214,208,195],lineWidth:.2},columnStyles:{0:{fontStyle:'bold',cellWidth:45,textColor:[90,90,90]}},margin:{left:14,right:14}});
+  y=doc.lastAutoTable.finalY+20;doc.setFontSize(9);doc.setFont('helvetica','bold');doc.text('For '+(S.company.name||'DEEP Aqua'),196,y,{align:'right'});doc.setFont('helvetica','normal');doc.text('Authorised signatory',196,y+14,{align:'right'});
+  pdfFooter(doc);download((r.no||'receipt').replace(/\//g,'-')+'.pdf',doc.output('blob'));
+}
+function tablePdf(title,sub,cols,rows,foot){
+  const {jsPDF}=window.jspdf;const doc=new jsPDF({unit:'mm',format:'a4',orientation:cols.length>7?'landscape':'portrait'});
+  const W=doc.internal.pageSize.getWidth();
+  if(S.logoPng)doc.addImage(S.logoPng.data,'JPEG',14,10,30,30*S.logoPng.ar);
+  doc.setFont('helvetica','bold');doc.setFontSize(13);doc.setTextColor(6,59,91);doc.text(title,W-14,15,{align:'right'});
+  doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(90);doc.text([S.company.name+' · '+(S.company.legal||''),sub].filter(Boolean),W-14,20,{align:'right'});
+  doc.autoTable({startY:30,head:[cols.map(c=>c.l)],body:rows.map(r=>r.map((v,i)=>cols[i].n?(typeof v==='number'?v.toLocaleString('en-IN',{minimumFractionDigits:cols[i].q?0:2,maximumFractionDigits:cols[i].q?3:2}):v):v)),foot:foot?[foot.map((v,i)=>typeof v==='number'?v.toLocaleString('en-IN',{minimumFractionDigits:cols[i]&&cols[i].q?0:2,maximumFractionDigits:2}):v)]:undefined,
+    theme:'striped',styles:{fontSize:8,cellPadding:1.8},headStyles:{fillColor:[6,59,91]},footStyles:{fillColor:[240,236,227],textColor:20,fontStyle:'bold'},
+    columnStyles:Object.fromEntries(cols.map((c,i)=>[i,c.n?{halign:'right'}:{}])),margin:{left:14,right:14}});
+  pdfFooter(doc);download(title.replace(/[^\w]+/g,'-')+'.pdf',doc.output('blob'));
+}
+
+/* ---------------- dialogs ---------------- */
+function modal({title,body,foot,wide,onOpen}){
+  const d=document.createElement('dialog');if(wide)d.style.width='min(1120px,calc(100% - 22px))';
+  d.innerHTML=`<div class="dh"><h3>${esc(title)}</h3><button class="btn ghost sm" data-close aria-label="Close">${icon('M18 6 6 18M6 6l12 12')}</button></div><div class="db">${body}</div>${foot?`<div class="df">${foot}</div>`:''}`;
+  document.body.appendChild(d);d.addEventListener('close',()=>d.remove());d.addEventListener('click',e=>{if(e.target.closest('[data-close]'))d.close()});
+  d.showModal();onOpen&&onOpen(d);return d;
+}
+function confirmBox(text,okLabel){return new Promise(res=>{const d=modal({title:'Please confirm',body:`<p>${esc(text)}</p>`,foot:`<button class="btn" data-close>Cancel</button><button class="btn primary" data-ok>${esc(okLabel||'Yes, continue')}</button>`});d.querySelector('[data-ok]').onclick=()=>{d.close();res(true)};d.addEventListener('close',()=>res(false))})}
+
+/* ---------------- shell ---------------- */
+function render(){
+  const root=$('#root');
+  if(!S.user)return;
+  if(!can(S.view))S.view=['distributor','agency'].includes(S.user.role)?'portal':(S.user.role==='pending'?'pending':'dashboard');
+  let nav='',g='';
+  VIEWS.filter(v=>v.roles.includes(S.user.role)).forEach(v=>{if(v.g!==g){g=v.g;nav+=`<div class="grp">${g}</div>`}nav+=`<a href="#${v.id}" data-view="${v.id}" class="${S.view===v.id?'on':''}">${icon(v.icon)}${esc(v.name)}</a>`});
+  const view=VIEWS.find(v=>v.id===S.view);
+  root.innerHTML=`<div class="app">
+  <aside class="side" id="side"><div class="brand"><span class="lg"><img src="${window.DEEP_LOGO}" alt="DEEP"></span><small>Business<br>suite</small></div>
+  <nav aria-label="Main">${nav}</nav>
+  <div class="me"><div><b>${esc(S.user.name||S.user.email)}</b><span>${esc((ROLES[S.user.role]||{}).name||S.user.role)} · ${esc(S.user.email)}</span></div><button class="btn sm" id="signout">${icon('M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9')}Sign out</button></div></aside>
+  <div class="main"><div class="top"><button class="btn ghost sm menu-btn" id="menuBtn" aria-label="Open menu">${icon('M4 7h16M4 12h16M4 17h16')}</button><h1>${esc(view?view.name:'Waiting for approval')}</h1>
+  <span class="mode"><i></i>Live</span>
+  ${can('sales')&&S.view!=='sales'?`<button class="btn primary sm" data-new="sales" aria-label="New invoice">${icon('M12 5v14M5 12h14')}<span>New invoice</span></button>`:''}</div>
+  <div class="content" id="content"></div></div></div>`;
+  $('#signout').onclick=async()=>{await DB.signOut();S.user=null;showLogin()};
+  $('#menuBtn').onclick=()=>$('#side').classList.toggle('open');
+  const c=$('#content');
+  try{(RENDER[S.view]||renderPending)(c);$$('.kpi',c).forEach(k=>tilt(k,10))}catch(e){console.error(e);c.innerHTML=`<div class="msg err">Something went wrong showing this page: ${esc(e.message)}</div>`}
+}
+document.addEventListener('click',e=>{
+  const a=e.target.closest('[data-view]');if(a){e.preventDefault();go(a.dataset.view);const s=$('#side');if(s&&innerWidth<1000)s.classList.remove('open')}
+  const n=e.target.closest('[data-new]');if(n){openDoc(n.dataset.new)}
+});
+function go(v){S.view=v;try{history.replaceState(null,'','#'+v)}catch(e){}render();window.scrollTo(0,0)}
+window.addEventListener('hashchange',()=>{const v=location.hash.slice(1);if(S.user&&v&&v!==S.view&&VIEWS.some(x=>x.id===v)){S.view=v;render()}});
+function renderPending(c){c.innerHTML=`<div class="card card-b"><h2 style="font-size:28px;margin-bottom:10px">Your account is waiting for approval</h2><p class="muted">An Admin needs to give you a role. Ask them to open <b>Users &amp; roles</b> and approve <b>${esc(S.user.email)}</b>. Then sign out and sign in again.</p><p class="muted" style="margin-top:12px">Contact: ${esc(S.company.email_admin||'admin@deepaqua.in')}</p></div>`}
+
+/* ---------------- dashboard ---------------- */
+const RENDER={};
+RENDER.dashboard=c=>{
+  const td=today(),m0=td.slice(0,8)+'01';
+  const sum=(t,f)=>T(t).filter(f).reduce((a,d)=>a+(+d.total||0),0);
+  const todaySales=sum('sales',d=>d.date===td),monthSales=sum('sales',d=>d.date>=m0)-sum('sales_returns',d=>d.date>=m0);
+  const outstanding=T('customers').reduce((a,cu)=>a+Math.max(0,custBalance(cu.id)),0);
+  let stockVal=0,low=[];T('products').filter(p=>p.active!==false).forEach(p=>{const q=stockOf(p.id);stockVal+=q*(+p.cost||+p.rate||0);if(q<=(+p.reorder||0))low.push([p,q])});
+  const days=[];for(let i=13;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());const k=d.toISOString().slice(0,10);days.push([k,sum('sales',x=>x.date===k)])}
+  const mx=Math.max(1,...days.map(x=>x[1]));
+  const top={};T('sales').filter(d=>d.date>=m0).forEach(d=>(d.items||[]).forEach(l=>{top[l.name]=(top[l.name]||0)+l.qty}));
+  const topL=Object.entries(top).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const recent=[...T('sales')].sort((a,b)=>(b.date+b.no).localeCompare(a.date+a.no)).slice(0,6);
+  c.innerHTML=`<div class="kpis">
+   <div class="kpi"><div class="ki">${icon('M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6')}</div><span>Today's sales</span><b>${inr0(todaySales)}</b><small>${T('sales').filter(d=>d.date===td).length} invoices</small></div>
+   <div class="kpi k2"><div class="ki">${icon('M3 3v18h18M7 15l4-4 3 3 5-6')}</div><span>This month (net)</span><b>${inr0(monthSales)}</b><small>after sales returns</small></div>
+   <div class="kpi k3"><div class="ki">${icon('M2 7h20v12H2zM2 11h20M6 15h4')}</div><span>To collect</span><b>${inr0(outstanding)}</b><small>customer outstanding</small></div>
+   <div class="kpi k4"><div class="ki">${icon('M21 16V8l-9-5-9 5v8l9 5zM3.3 7 12 12l8.7-5M12 22V12')}</div><span>Stock value</span><b>${inr0(stockVal)}</b><small>at cost</small></div>
+   <div class="kpi k5 ${low.length?'alert':''}"><div class="ki">${icon('M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01')}</div><span>Low stock</span><b>${low.length}</b><small>at or below reorder level</small></div></div>
+  <div class="grid2"><div class="card"><div class="card-h"><h3>Sales, last 14 days</h3><span class="pill teal">Peak ${inr0(mx)}</span></div><div class="card-b">
+   <div class="chart"><div class="ygrid">${[1,.75,.5,.25,0].map(f=>`<div><span>${f?inr0(mx*f).replace('₹',''):'0'}</span></div>`).join('')}</div>
+   <div class="bars">${days.map(([k,v],i)=>{const h=Math.max(2,v/mx*100);return `<div class="b ${i===13?'today':''}" style="--h:${(h*1.9).toFixed(0)}px"><em>${dfmt(k)} · ${inr0(v)}</em><i style="height:${h}%;animation-delay:${i*45}ms"></i><span>${k.slice(8)}</span></div>`}).join('')}</div></div></div></div>
+   <div class="card"><div class="card-h"><h3>Top products this month</h3></div><div class="card-b">${topL.length?`<div class="rank">${topL.map(([n,q],i)=>`<div class="r"><div><span>${esc(n)}</span><b>${qtyf(q)}</b></div><div class="track"><i style="width:${(q/topL[0][1]*100).toFixed(1)}%;animation-delay:${i*90}ms"></i></div></div>`).join('')}</div>`:'<div class="empty" style="padding:24px">No sales yet this month.</div>'}</div></div></div>
+  <div class="grid2"><div class="card"><div class="card-h"><h3>Recent invoices</h3>${can('sales')?`<button class="btn sm" data-view="sales">See all</button>`:''}</div><div class="tw">${recent.length?`<table class="t"><thead><tr><th>No.</th><th>Date</th><th>Customer</th><th class="n">Amount</th></tr></thead><tbody>${recent.map(d=>`<tr><td>${esc(d.no)}</td><td>${dfmt(d.date)}</td><td>${esc(d.party_name)}</td><td class="n">${inr(d.total)}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">No invoices yet.<button class="btn primary sm" data-new="sales">Create the first invoice</button></div>'}</div></div>
+   <div class="card"><div class="card-h"><h3>Low stock</h3></div><div class="card-b">${low.length?low.map(([p,q])=>`<div class="list-row"><span>${esc(p.name)}</span><span class="pill bad">${qtyf(q)} left</span></div>`).join(''):'<div class="empty" style="padding:24px">All products are above their reorder level.</div>'}</div></div></div>`;
+};
+
+/* ---------------- masters ---------------- */
+const MASTERS={
+  brands:{one:'brand',fields:[['name','Brand name','text',1],['note','Notes','text']],cols:[['name','Brand'],['note','Notes']]},
+  products:{one:'product',fields:[['name','Product name','text',1],['brand_id','Brand','brand'],['size','Pack size','text'],['sku','Code / SKU','text'],['hsn','HSN code','text'],['gst','GST %','number'],['mrp','MRP ₹ (per unit)','number'],['rate','Selling rate ₹ (before GST)','number'],['cost','Purchase / making cost ₹','number'],['unit','Unit','text'],['case_qty','Units per case','number'],['opening','Opening stock (units)','number'],['reorder','Reorder level (units)','number'],['active','Active','check']],
+    cols:[['name','Product',(v,r)=>esc(v)],['brand_id','Brand',v=>esc((byId('brands',v)||{}).name||'')],['hsn','HSN'],['gst','GST %',v=>v+'%','n'],['mrp','MRP',v=>inr(v),'n'],['rate','Rate',v=>inr(v),'n'],['_stock','Stock',(v,r)=>{const q=stockOf(r.id);return `<span class="pill ${q<=(+r.reorder||0)?'bad':'ok'}">${qtyf(q)}</span>`},'n']]},
+  customers:{one:'customer',fields:[['name','Customer / business name','text',1],['type','Type','ctype'],['contact','Contact person','text'],['phone','Phone / WhatsApp','text'],['email','Email','text'],['gstin','GSTIN','text'],['state','State','state'],['address','Address','textarea'],['credit_limit','Credit limit ₹','number'],['opening','Opening balance ₹ (receivable)','number'],['active','Active','check']],
+    cols:[['name','Customer'],['type','Type',v=>v?`<span class="pill teal">${esc(v)}</span>`:''],['phone','Phone'],['state','State'],['gstin','GSTIN'],['_bal','Outstanding',(v,r)=>{const b=custBalance(r.id);return `<span class="${b>(+r.credit_limit||Infinity)?'pill bad':''}">${inr(b)}</span>`},'n']]},
+  suppliers:{one:'supplier',fields:[['name','Supplier name','text',1],['contact','Contact person','text'],['phone','Phone','text'],['email','Email','text'],['gstin','GSTIN','text'],['state','State','state'],['address','Address','textarea']],cols:[['name','Supplier'],['contact','Contact'],['phone','Phone'],['state','State'],['gstin','GSTIN']]}
+};
+function fieldHtml([k,label,type,req],v,idp){
+  const id=(idp||'f_')+k;
+  if(type==='check')return `<label class="check"><input type="checkbox" id="${id}" data-k="${k}" ${v!==false?'checked':''}> ${esc(label)}</label>`;
+  let inp;
+  if(type==='brand')inp=`<select id="${id}" data-k="${k}"><option value="">—</option>${T('brands').map(b=>`<option value="${b.id}" ${b.id===v?'selected':''}>${esc(b.name)}</option>`).join('')}</select>`;
+  else if(type==='state')inp=`<select id="${id}" data-k="${k}"><option value="">Choose state</option>${STATES.map(([s,c])=>`<option ${s===v?'selected':''}>${s}</option>`).join('')}</select>`;
+  else if(type==='ctype')inp=`<select id="${id}" data-k="${k}">${CUST_TYPES.map(s=>`<option ${s===v?'selected':''}>${s}</option>`).join('')}</select>`;
+  else if(type==='textarea')inp=`<textarea id="${id}" data-k="${k}">${esc(v)}</textarea>`;
+  else inp=`<input type="${type}" id="${id}" data-k="${k}" value="${esc(v??'')}" ${type==='number'?'step="any"':''} ${req?'required':''}>`;
+  return `<label class="field ${type==='textarea'?'wide':''}"><span>${esc(label)}${req?' *':''}</span>${inp}</label>`;
+}
+function readFields(root){const o={};$$('[data-k]',root).forEach(el=>{const k=el.dataset.k;o[k]=el.type==='checkbox'?el.checked:el.type==='number'?(el.value===''?'':+el.value):el.value.trim()});return o}
+function masterView(t){return c=>{
+  const M=MASTERS[t];const write=canWrite(t)&&((t!=='products'&&t!=='brands')||['admin','manager','store'].includes(S.user.role));
+  c.innerHTML=`<div class="card"><div class="card-h"><input type="search" id="q" placeholder="Search ${esc(M.one)}s" style="max-width:320px"><span class="spacer"></span>
+   <button class="btn sm" id="exp">${icon('M12 3v12M7 10l5 5 5-5M5 21h14')}Export CSV</button>${write?`<button class="btn primary sm" id="add">${icon('M12 5v14M5 12h14')}Add ${esc(M.one)}</button>`:''}</div><div class="tw" id="list"></div></div>`;
+  const draw=()=>{const q=$('#q').value.toLowerCase();const rows=T(t).filter(r=>!q||JSON.stringify(r).toLowerCase().includes(q)).sort((a,b)=>(a.name||'').localeCompare(b.name||''));
+    $('#list').innerHTML=rows.length?`<table class="t"><thead><tr>${M.cols.map(([k,l,f,n])=>`<th class="${n?'n':''}">${esc(l)}</th>`).join('')}<th></th></tr></thead><tbody>${rows.map(r=>`<tr>${M.cols.map(([k,l,f,n])=>`<td class="${n?'n':''}">${f?f(r[k],r):esc(r[k])}</td>`).join('')}<td class="acts">${write?`<button class="btn sm" data-edit="${r.id}">Edit</button>`:''}${t==='customers'?` <button class="btn sm" data-stmt="${r.id}">Statement</button>`:''}</td></tr>`).join('')}</tbody></table>`:`<div class="empty">No ${esc(M.one)}s yet.${write?`<button class="btn primary sm" id="add2">Add the first ${esc(M.one)}</button>`:''}</div>`;
+    $$('[data-edit]').forEach(b=>b.onclick=()=>editMaster(t,byId(t,b.dataset.edit)));$$('[data-stmt]').forEach(b=>b.onclick=()=>statement(b.dataset.stmt));const a2=$('#add2');if(a2)a2.onclick=()=>editMaster(t,{})};
+  $('#q').oninput=draw;draw();if($('#add'))$('#add').onclick=()=>editMaster(t,{});
+  $('#exp').onclick=()=>download(t+'.csv',csv([M.fields.map(f=>f[1]),...T(t).map(r=>M.fields.map(f=>f[2]==='brand'?(byId('brands',r[f[0]])||{}).name:r[f[0]]))]),'text/csv');
+}}
+['brands','products','customers','suppliers'].forEach(t=>RENDER[t]=masterView(t));
+function editMaster(t,r){
+  const M=MASTERS[t];const isNew=!r.id;
+  if(isNew&&t==='products')r={hsn:'2201',gst:18,unit:'Nos',active:true,brand_id:(T('brands')[0]||{}).id};
+  if(isNew&&t==='customers')r={state:S.company.state||'Tamil Nadu',type:'Distributor',active:true};
+  if(isNew&&t==='suppliers')r={state:S.company.state||'Tamil Nadu'};
+  const d=modal({title:(isNew?'Add ':'Edit ')+M.one,body:`<form class="form-grid" id="mf">${M.fields.map(f=>fieldHtml(f,r[f[0]])).join('')}</form>`,
+    foot:`${!isNew&&canEdit()?`<button class="btn danger" data-del>Delete</button><span class="spacer"></span>`:''}<button class="btn" data-close>Cancel</button><button class="btn primary" data-save>Save ${esc(M.one)}</button>`});
+  d.querySelector('[data-save]').onclick=async()=>{const o=readFields(d);if(!o.name){toast('Enter a name first.',1);return}
+    try{const ob={...r,...o};await save(t,ob);d.close();toast(M.one[0].toUpperCase()+M.one.slice(1)+' saved');render()}catch(e){toast(e.message,1)}};
+  const db=d.querySelector('[data-del]');if(db)db.onclick=async()=>{if(await confirmBox(`Delete ${r.name}? Documents that use it keep their copy of the name.`,'Delete')){try{await del(t,r.id);d.close();toast('Deleted');render()}catch(e){toast(e.message,1)}}};
+}
+
+/* ---------------- documents ---------------- */
+function docList(type){return c=>{
+  const cfg=DOCS[type];const fromD=today().slice(0,8)+'01';
+  c.innerHTML=`<div class="card"><div class="card-h"><div class="toolbar" style="flex:1"><label class="field grow"><span>Search</span><input type="search" id="q" placeholder="Number, ${cfg.party||'reason'}, product"></label>
+   <label class="field"><span>From</span><input type="date" id="f" value="${fromD}"></label><label class="field"><span>To</span><input type="date" id="to" value="${today()}"></label></div>
+   ${canWrite(type)?`<button class="btn primary" data-new="${type}">${icon('M12 5v14M5 12h14')}New ${esc(cfg.title.toLowerCase())}</button>`:''}</div><div class="tw" id="list"></div></div>`;
+  const draw=()=>{const q=$('#q').value.toLowerCase(),f=$('#f').value,to=$('#to').value;
+    const rows=T(type).filter(d=>inRange(d.date,f,to)&&(!q||JSON.stringify(d).toLowerCase().includes(q))).sort((a,b)=>(b.date+b.no).localeCompare(a.date+a.no));
+    const tot=rows.reduce((a,d)=>a+(+d.total||0),0);
+    $('#list').innerHTML=rows.length?`<table class="t"><thead><tr><th>No.</th><th>Date</th><th>${cfg.party?esc(cfg.party[0].toUpperCase()+cfg.party.slice(1)):'Reason'}</th><th class="n">Qty</th>${cfg.tax?'<th class="n">Taxable</th><th class="n">GST</th>':''}<th class="n">Total</th><th></th></tr></thead><tbody>${rows.map(d=>`<tr><td><b>${esc(d.no)}</b></td><td>${dfmt(d.date)}</td><td>${esc(d.party_name||d.reason||'')}</td><td class="n">${qtyf(d.qty)}</td>${cfg.tax?`<td class="n">${inr(d.taxable)}</td><td class="n">${inr((+d.cgst||0)+(+d.sgst||0)+(+d.igst||0))}</td>`:''}<td class="n"><b>${inr(d.total)}</b></td><td class="acts"><button class="btn sm" data-pdf="${d.id}">${icon('M12 3v12M7 10l5 5 5-5M5 21h14')}PDF</button> <button class="btn sm" data-open="${d.id}">${canEdit()?'Edit':'View'}</button></td></tr>`).join('')}</tbody><tfoot><tr><td colspan="${cfg.tax?6:4}">${rows.length} entries</td><td class="n">${inr(tot)}</td><td></td></tr></tfoot></table>`
+      :`<div class="empty">No ${esc(cfg.plural.toLowerCase())} in this period.${canWrite(type)?`<button class="btn primary sm" data-new="${type}">New ${esc(cfg.title.toLowerCase())}</button>`:''}</div>`;
+    $$('[data-pdf]').forEach(b=>b.onclick=()=>docPdf(type,byId(type,b.dataset.pdf)));$$('[data-open]').forEach(b=>b.onclick=()=>openDoc(type,byId(type,b.dataset.open)));};
+  ['q','f','to'].forEach(id=>$('#'+id).oninput=draw);draw();
+}}
+['sales','sales_returns','purchases','purchase_returns','wastage'].forEach(t=>RENDER[t]=docList(t));
+
+function openDoc(type,existing){
+  const cfg=DOCS[type];if(!canWrite(type)&&!existing){toast('Your role cannot create this.',1);return}
+  const readOnly=existing&&!canEdit();
+  let d=existing?JSON.parse(JSON.stringify(existing)):{date:today(),items:[{}]};
+  if(!existing)d.no=nextNo(type,d.date);
+  const parties=cfg.party==='customer'?T('customers').filter(x=>x.active!==false||x.id===d.customer_id):cfg.party==='supplier'?T('suppliers'):[];
+  const pkey=cfg.party==='customer'?'customer_id':'supplier_id';
+  const prods=T('products').filter(p=>p.active!==false||(d.items||[]).some(l=>l.product_id===p.id));
+  const pOpts=sel=>`<option value="">Choose product</option>${prods.map(p=>`<option value="${p.id}" ${p.id===sel?'selected':''}>${esc(p.name)}${p.size?' · '+esc(p.size):''}</option>`).join('')}`;
+  const body=`<div class="doc-head">
+   ${cfg.party?`<label class="field"><span>${esc(cfg.party==='customer'?'Customer':'Supplier')} *</span><select id="party">${`<option value="">Choose ${cfg.party}</option>`+parties.map(p=>`<option value="${p.id}" ${p.id===d[pkey]?'selected':''}>${esc(p.name)}${p.type?' · '+esc(p.type):''}</option>`).join('')}</select><div class="party-box" id="pbox"></div></label>`:`<label class="field"><span>Reason *</span><select id="reason">${['Damaged in transit','Leakage','Expired','Production reject','Sample / free','Other'].map(r=>`<option ${r===d.reason?'selected':''}>${r}</option>`).join('')}</select></label>`}
+   <label class="field"><span>Number</span><input type="text" id="no" value="${esc(d.no)}"></label>
+   <label class="field"><span>Date</span><input type="date" id="date" value="${esc(d.date)}"></label>
+   <label class="field"><span>${esc(cfg.party?cfg.refLabel:'Reference')}</span><input type="text" id="ref" value="${esc(d.ref||'')}"></label></div>
+   <div class="tw" style="margin-top:18px"><table class="t lines"><thead><tr><th style="min-width:220px">Product</th><th class="n">Qty</th><th class="n">${cfg.tax?'Rate ₹':'Cost ₹'}</th>${cfg.tax?'<th class="n">Disc %</th><th class="n">GST %</th>':''}<th class="n">Amount</th><th></th></tr></thead><tbody id="lines"></tbody></table></div>
+   <button class="btn sm" id="addLine" style="margin-top:12px">${icon('M12 5v14M5 12h14')}Add line</button>
+   <div class="totals" style="margin-top:20px"><label class="field"><span>Notes</span><textarea id="notes">${esc(d.notes||'')}</textarea></label><div class="sum" id="sum"></div></div>`;
+  const m=modal({title:(existing?(readOnly?'':'Edit ')+cfg.title+' '+d.no:'New '+cfg.title.toLowerCase()),wide:true,body,
+    foot:`${existing&&canEdit()?`<button class="btn danger" data-del>Delete</button>`:''}<span class="spacer"></span><button class="btn" data-close>Close</button>${existing?`<button class="btn" data-pdf>${icon('M12 3v12M7 10l5 5 5-5M5 21h14')}Download PDF</button>`:''}${readOnly?'':`<button class="btn" data-savepdf>Save &amp; PDF</button><button class="btn primary" data-save>Save</button>`}`});
+  const lines=$('#lines',m);
+  const lineRow=(l,i)=>{const p=byId('products',l.product_id);const st=p?stockOf(p.id)+(existing?(existing.items||[]).filter(x=>x.product_id===p.id).reduce((a,x)=>a-cfg.sign*x.qty,0):0):null;
+    return `<tr data-i="${i}"><td><select class="prod">${pOpts(l.product_id)}</select>${p?`<div class="stockhint ${cfg.sign<0&&st<(+l.qty||0)?'low':''}">In stock: ${qtyf(st)}${p.hsn?' · HSN '+esc(p.hsn):''}</div>`:''}</td>
+    <td><input class="qty" type="number" step="any" min="0" value="${l.qty??''}"></td><td><input class="rate" type="number" step="any" min="0" value="${l.rate??''}"></td>
+    ${cfg.tax?`<td><input class="disc" type="number" step="any" min="0" max="100" value="${l.disc??''}"></td><td><input class="gst" type="number" step="any" min="0" value="${l.gst??''}"></td>`:''}
+    <td class="n" style="font-weight:600">${l.product_id?inr(l.total||0):''}</td><td><button class="btn ghost sm" data-rm="${i}" aria-label="Remove line">${icon('M18 6 6 18M6 6l12 12')}</button></td></tr>`};
+  const collect=()=>{d.date=$('#date',m).value;d.no=$('#no',m).value.trim();d.ref=$('#ref',m).value.trim();d.notes=$('#notes',m).value.trim();
+    if(cfg.party)d[pkey]=$('#party',m).value;else d.reason=$('#reason',m).value;
+    d.items=$$('tr[data-i]',lines).map(tr=>({...d.items[+tr.dataset.i],product_id:$('.prod',tr).value,qty:$('.qty',tr).value,rate:$('.rate',tr).value,disc:cfg.tax?$('.disc',tr).value:0,gst:cfg.tax?$('.gst',tr).value:0}))};
+  const draw=(full)=>{
+    if(full)lines.innerHTML=d.items.map(lineRow).join('');
+    const calc=calcDoc(JSON.parse(JSON.stringify(d)),type);
+    if(!full){$$('tr[data-i]',lines).forEach(tr=>{const l=d.items[+tr.dataset.i];const tx=(+l.qty||0)*(+l.rate||0)*(1-(+l.disc||0)/100);tr.children[cfg.tax?5:3].textContent=l.product_id?inr(r2(tx*(1+(cfg.tax?(+l.gst||0):0)/100))):''})}
+    if(cfg.party){const p=byId(cfg.party==='customer'?'customers':'suppliers',d[pkey]);$('#pbox',m).innerHTML=p?`${esc(p.state||'State not set')}${p.gstin?' · GSTIN '+esc(p.gstin):''}${cfg.party==='customer'?' · Outstanding '+inr(custBalance(p.id)):''}${calc.interstate?' · <b>IGST</b>':' · CGST + SGST'}`:''}
+    $('#sum',m).innerHTML=`<div><span>Quantity</span><span>${qtyf(calc.qty)}</span></div>${cfg.tax?`<div><span>Taxable value</span><span>${inr(calc.taxable)}</span></div>${calc.interstate?`<div><span>IGST</span><span>${inr(calc.igst)}</span></div>`:`<div><span>CGST</span><span>${inr(calc.cgst)}</span></div><div><span>SGST</span><span>${inr(calc.sgst)}</span></div>`}<div><span>Round off</span><span>${inr(calc.roundoff)}</span></div>`:''}<div class="grand"><span>${type==='wastage'?'Total value':'Grand total'}</span><span>${inr(calc.total)}</span></div><div class="words">${esc(amountWords(calc.total))}</div>`;
+  };
+  lines.addEventListener('change',e=>{const tr=e.target.closest('tr[data-i]');collect();if(e.target.classList.contains('prod')){const p=byId('products',e.target.value);const l=d.items[+tr.dataset.i];if(p){l.rate=+p[cfg.rate]||+p.rate||0;l.gst=cfg.tax?(+p.gst||0):0;l.name=p.name+(p.size&&!p.name.includes(p.size)?' '+p.size:'');l.hsn=p.hsn||'';if(!l.qty)l.qty=1}draw(true)}else draw(false)});
+  lines.addEventListener('input',()=>{collect();draw(false)});
+  lines.addEventListener('click',e=>{const b=e.target.closest('[data-rm]');if(b){collect();d.items.splice(+b.dataset.rm,1);if(!d.items.length)d.items.push({});draw(true)}});
+  $('#addLine',m).onclick=()=>{collect();d.items.push({});draw(true);const s=$$('.prod',lines).pop();s&&s.focus()};
+  if(cfg.party)$('#party',m).onchange=()=>{collect();draw(false)};
+  $('#date',m).onchange=()=>{if(!existing){$('#no',m).value=nextNo(type,$('#date',m).value)}};
+  const doSave=async(pdf)=>{collect();const doc=calcDoc(d,type);
+    if(cfg.party&&!doc[pkey]){toast(`Choose a ${cfg.party} first.`,1);return}
+    if(!doc.items.length||doc.items.some(l=>!(l.qty>0))){toast('Add at least one product with a quantity above zero.',1);return}
+    if(T(type).some(x=>x.no===doc.no&&x.id!==doc.id)){toast('That number is already used. Change it.',1);return}
+    if(cfg.sign<0){const short=doc.items.filter(l=>{const before=stockOf(l.product_id)+(existing?(existing.items||[]).filter(x=>x.product_id===l.product_id).reduce((a,x)=>a+x.qty,0):0);return l.qty>before});
+      if(short.length&&!(await confirmBox(`Stock is not enough for ${short.map(l=>l.name).join(', ')}. Save anyway? Stock will go negative.`,'Save anyway')))return}
+    if(type==='sales'&&doc.customer_id){const cu=byId('customers',doc.customer_id);const lim=+cu.credit_limit||0;const after=custBalance(cu.id)+doc.total-(existing?+existing.total||0:0);
+      if(lim&&after>lim&&!(await confirmBox(`${cu.name} will owe ${inr(after)}, above the credit limit of ${inr(lim)}. Save anyway?`,'Save anyway')))return}
+    doc.user=S.user.name||S.user.email;
+    try{const saved=await save(type,doc);m.close();toast(cfg.title+' '+saved.no+' saved');if(pdf)docPdf(type,saved);render()}catch(e){toast('Could not save: '+e.message,1)}};
+  const sv=m.querySelector('[data-save]');if(sv)sv.onclick=()=>doSave(false);const sp=m.querySelector('[data-savepdf]');if(sp)sp.onclick=()=>doSave(true);
+  const pd=m.querySelector('[data-pdf]');if(pd)pd.onclick=()=>docPdf(type,existing);
+  const dl=m.querySelector('[data-del]');if(dl)dl.onclick=async()=>{if(await confirmBox(`Delete ${cfg.title.toLowerCase()} ${existing.no}? Stock and balances will be recalculated.`,'Delete')){try{await del(type,existing.id);m.close();toast('Deleted');render()}catch(e){toast(e.message,1)}}};
+  if(readOnly)$$('input,select,textarea,#addLine,[data-rm]',m.querySelector('.db')).forEach(el=>el.disabled=true);
+  draw(true);
+}
+
+/* ---------------- receipts ---------------- */
+RENDER.receipts=c=>{
+  c.innerHTML=`<div class="card"><div class="card-h"><div class="toolbar" style="flex:1"><label class="field grow"><span>Search</span><input type="search" id="q" placeholder="Customer, number, reference"></label><label class="field"><span>From</span><input type="date" id="f" value="${today().slice(0,8)}01"></label><label class="field"><span>To</span><input type="date" id="to" value="${today()}"></label></div>
+  ${canWrite('receipts')?`<button class="btn primary" id="add">${icon('M12 5v14M5 12h14')}Record payment</button>`:''}</div><div class="tw" id="list"></div></div>`;
+  const draw=()=>{const q=$('#q').value.toLowerCase(),f=$('#f').value,to=$('#to').value;const rows=T('receipts').filter(r=>inRange(r.date,f,to)&&(!q||JSON.stringify(r).toLowerCase().includes(q))).sort((a,b)=>(b.date+b.no).localeCompare(a.date+a.no));
+    $('#list').innerHTML=rows.length?`<table class="t"><thead><tr><th>No.</th><th>Date</th><th>Customer</th><th>Mode</th><th>Reference</th><th class="n">Amount</th><th></th></tr></thead><tbody>${rows.map(r=>`<tr><td><b>${esc(r.no)}</b></td><td>${dfmt(r.date)}</td><td>${esc(r.party_name)}</td><td><span class="pill teal">${esc(r.mode)}</span></td><td>${esc(r.ref)}</td><td class="n"><b>${inr(r.amount)}</b></td><td class="acts"><button class="btn sm" data-pdf="${r.id}">PDF</button> ${canEdit()?`<button class="btn sm" data-edit="${r.id}">Edit</button>`:''}</td></tr>`).join('')}</tbody><tfoot><tr><td colspan="5">${rows.length} payments</td><td class="n">${inr(rows.reduce((a,r)=>a+(+r.amount||0),0))}</td><td></td></tr></tfoot></table>`:'<div class="empty">No payments recorded in this period.</div>';
+    $$('[data-pdf]').forEach(b=>b.onclick=()=>receiptPdf(byId('receipts',b.dataset.pdf)));$$('[data-edit]').forEach(b=>b.onclick=()=>editReceipt(byId('receipts',b.dataset.edit)))};
+  ['q','f','to'].forEach(id=>$('#'+id).oninput=draw);draw();if($('#add'))$('#add').onclick=()=>editReceipt({});
+};
+function editReceipt(r){
+  const isNew=!r.id;if(isNew)r={date:today(),mode:'UPI',no:nextNo('receipts',today())};
+  const d=modal({title:isNew?'Record payment received':'Edit payment '+r.no,body:`<div class="form-grid">
+   <label class="field wide"><span>Customer *</span><select id="rc"><option value="">Choose customer</option>${T('customers').map(c=>`<option value="${c.id}" ${c.id===r.customer_id?'selected':''}>${esc(c.name)} — owes ${inr(custBalance(c.id))}</option>`).join('')}</select></label>
+   <label class="field"><span>Number</span><input type="text" id="rn" value="${esc(r.no)}"></label><label class="field"><span>Date</span><input type="date" id="rd" value="${esc(r.date)}"></label>
+   <label class="field"><span>Amount ₹ *</span><input type="number" step="any" id="ra" value="${esc(r.amount??'')}"></label>
+   <label class="field"><span>Mode</span><select id="rm">${['Cash','UPI','Bank transfer','Cheque','Card','Other'].map(x=>`<option ${x===r.mode?'selected':''}>${x}</option>`).join('')}</select></label>
+   <label class="field"><span>Reference (UTR / cheque no.)</span><input type="text" id="rr" value="${esc(r.ref||'')}"></label>
+   <label class="field"><span>Against invoice</span><select id="rg"><option value="">On account</option>${T('sales').filter(s=>!r.customer_id||s.customer_id===r.customer_id).slice(-200).reverse().map(s=>`<option ${s.no===r.against?'selected':''}>${esc(s.no)}</option>`).join('')}</select></label>
+   <label class="field wide"><span>Notes</span><textarea id="rt">${esc(r.notes||'')}</textarea></label></div>`,
+   foot:`${!isNew&&canEdit()?'<button class="btn danger" data-del>Delete</button><span class="spacer"></span>':''}<button class="btn" data-close>Cancel</button><button class="btn primary" data-save>Save payment</button>`});
+  $('#rc',d).onchange=e=>{const id=e.target.value;$('#rg',d).innerHTML='<option value="">On account</option>'+T('sales').filter(s=>s.customer_id===id).reverse().map(s=>`<option>${esc(s.no)}</option>`).join('')};
+  d.querySelector('[data-save]').onclick=async()=>{const o={...r,customer_id:$('#rc',d).value,no:$('#rn',d).value.trim(),date:$('#rd',d).value,amount:r2($('#ra',d).value),mode:$('#rm',d).value,ref:$('#rr',d).value.trim(),against:$('#rg',d).value,notes:$('#rt',d).value.trim()};
+    if(!o.customer_id||!(o.amount>0)){toast('Choose a customer and enter an amount.',1);return}o.party_name=(byId('customers',o.customer_id)||{}).name;o.user=S.user.name||S.user.email;
+    try{await save('receipts',o);d.close();toast('Payment saved');render()}catch(e){toast(e.message,1)}};
+  const db=d.querySelector('[data-del]');if(db)db.onclick=async()=>{if(await confirmBox('Delete this payment?','Delete')){await del('receipts',r.id);d.close();render()}};
+}
+function statement(cid){
+  const cu=byId('customers',cid);const ev=[];
+  T('sales').filter(d=>d.customer_id===cid).forEach(d=>ev.push([d.date,'Invoice '+d.no,d.total,0]));
+  T('sales_returns').filter(d=>d.customer_id===cid).forEach(d=>ev.push([d.date,'Sales return '+d.no,0,d.total]));
+  T('receipts').filter(d=>d.customer_id===cid).forEach(d=>ev.push([d.date,'Payment '+d.no+(d.mode?' ('+d.mode+')':''),0,d.amount]));
+  ev.sort((a,b)=>a[0].localeCompare(b[0]));let bal=+cu.opening||0;const rows=[['','Opening balance','','',bal]];ev.forEach(e=>{bal=r2(bal+(+e[2]||0)-(+e[3]||0));rows.push([e[0],e[1],e[2]||'',e[3]||'',bal])});
+  const d=modal({title:'Statement — '+cu.name,wide:true,body:`<div class="tw"><table class="t"><thead><tr><th>Date</th><th>Particulars</th><th class="n">Debit</th><th class="n">Credit</th><th class="n">Balance</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${dfmt(r[0])}</td><td>${esc(r[1])}</td><td class="n">${r[2]!==''?inr(r[2]):''}</td><td class="n">${r[3]!==''?inr(r[3]):''}</td><td class="n"><b>${inr(r[4])}</b></td></tr>`).join('')}</tbody></table></div>`,
+    foot:`<button class="btn" data-close>Close</button><button class="btn primary" data-p>Download PDF</button>`});
+  d.querySelector('[data-p]').onclick=()=>tablePdf('Statement - '+cu.name,'As on '+dfmt(today()),[{l:'Date'},{l:'Particulars'},{l:'Debit',n:1},{l:'Credit',n:1},{l:'Balance',n:1}],rows.map(r=>[dfmt(r[0]),r[1],r[2]===''?'':+r[2],r[3]===''?'':+r[3],+r[4]]));
+}
+
+/* ---------------- stock ---------------- */
+RENDER.stock=c=>{
+  const rows=T('products').map(p=>{const by={};['purchases','purchase_returns','sales','sales_returns','wastage'].forEach(t=>by[t]=T(t).reduce((a,d)=>a+(d.items||[]).filter(l=>l.product_id===p.id).reduce((s,l)=>s+l.qty,0),0));const q=stockOf(p.id);return {p,by,q,val:q*(+p.cost||0)}});
+  c.innerHTML=`<div class="card"><div class="card-h"><h3>Stock by product (units)</h3><button class="btn sm" id="pdf">PDF</button></div><div class="tw"><table class="t"><thead><tr><th>Product</th><th class="n">Opening</th><th class="n">Inward</th><th class="n">Purch. return</th><th class="n">Sold</th><th class="n">Sales return</th><th class="n">Wastage</th><th class="n">In stock</th><th class="n">Cases</th><th class="n">Value (cost)</th></tr></thead><tbody>
+  ${rows.map(r=>`<tr><td>${esc(r.p.name)}</td><td class="n">${qtyf(r.p.opening)}</td><td class="n">${qtyf(r.by.purchases)}</td><td class="n">${qtyf(r.by.purchase_returns)}</td><td class="n">${qtyf(r.by.sales)}</td><td class="n">${qtyf(r.by.sales_returns)}</td><td class="n">${qtyf(r.by.wastage)}</td><td class="n"><span class="pill ${r.q<=(+r.p.reorder||0)?'bad':'ok'}">${qtyf(r.q)}</span></td><td class="n">${r.p.case_qty?qtyf(Math.floor(r.q/r.p.case_qty)):'—'}</td><td class="n">${inr(r.val)}</td></tr>`).join('')||'<tr><td colspan="10" class="muted">Add products first.</td></tr>'}
+  </tbody><tfoot><tr><td colspan="9">Total stock value</td><td class="n">${inr(rows.reduce((a,r)=>a+r.val,0))}</td></tr></tfoot></table></div></div>`;
+  $('#pdf').onclick=()=>tablePdf('Stock summary','As on '+dfmt(today()),[{l:'Product'},{l:'Opening',n:1,q:1},{l:'Inward',n:1,q:1},{l:'Purch ret',n:1,q:1},{l:'Sold',n:1,q:1},{l:'Sales ret',n:1,q:1},{l:'Wastage',n:1,q:1},{l:'In stock',n:1,q:1},{l:'Value',n:1}],rows.map(r=>[r.p.name,+r.p.opening||0,r.by.purchases,r.by.purchase_returns,r.by.sales,r.by.sales_returns,r.by.wastage,r.q,r2(r.val)]));
+};
+
+/* ---------------- reports ---------------- */
+const REPORTS=[
+  {id:'sales_reg',name:'Sales register',roles:['admin','manager','accounts','sales']},
+  {id:'product_sales',name:'Product-wise sales',roles:['admin','manager','accounts','sales','store']},
+  {id:'customer_sales',name:'Customer-wise sales',roles:['admin','manager','accounts','sales']},
+  {id:'gst',name:'GST summary (HSN-wise)',roles:['admin','manager','accounts']},
+  {id:'sr_reg',name:'Sales returns register',roles:['admin','manager','accounts','sales']},
+  {id:'receipts_reg',name:'Payments received',roles:['admin','manager','accounts','sales']},
+  {id:'outstanding',name:'Customer outstanding',roles:['admin','manager','accounts','sales']},
+  {id:'inward_reg',name:'Inward register',roles:['admin','manager','accounts','store']},
+  {id:'pr_reg',name:'Purchase returns register',roles:['admin','manager','accounts','store']},
+  {id:'wastage_reg',name:'Wastage register',roles:['admin','manager','store']},
+  {id:'stock',name:'Stock summary',roles:STAFF},
+  {id:'daybook',name:'Day book (all entries)',roles:['admin','manager','accounts']}
+];
+function buildReport(id,f,to){
+  const N=(l,q)=>({l,n:1,q});const dr=(t)=>T(t).filter(d=>inRange(d.date,f,to)).sort((a,b)=>(a.date+a.no).localeCompare(b.date+b.no));
+  const reg=(t)=>{const rows=dr(t).map(d=>[dfmt(d.date),d.no,d.party_name||d.reason||'',d.party_gstin||'',d.qty,d.taxable,r2((+d.cgst||0)+(+d.sgst||0)),+d.igst||0,d.total]);return {cols:[{l:'Date'},{l:'No.'},{l:'Party'},{l:'GSTIN'},N('Qty',1),N('Taxable'),N('CGST+SGST'),N('IGST'),N('Total')],rows,foot:['Total','','','',rows.reduce((a,r)=>a+r[4],0),...[5,6,7,8].map(i=>r2(rows.reduce((a,r)=>a+r[i],0)))]}};
+  switch(id){
+    case 'sales_reg':return reg('sales');case 'sr_reg':return reg('sales_returns');case 'inward_reg':return reg('purchases');case 'pr_reg':return reg('purchase_returns');
+    case 'wastage_reg':{const rows=[];dr('wastage').forEach(d=>(d.items||[]).forEach(l=>rows.push([dfmt(d.date),d.no,d.reason||'',l.name,l.qty,l.total])));return {cols:[{l:'Date'},{l:'No.'},{l:'Reason'},{l:'Product'},N('Qty',1),N('Value')],rows,foot:['Total','','','',rows.reduce((a,r)=>a+r[4],0),r2(rows.reduce((a,r)=>a+r[5],0))]}}
+    case 'product_sales':{const m={};dr('sales').forEach(d=>(d.items||[]).forEach(l=>{const k=l.product_id;m[k]=m[k]||{n:l.name,q:0,t:0,tot:0,rq:0,rt:0};m[k].q+=l.qty;m[k].t+=l.taxable;m[k].tot+=l.total}));dr('sales_returns').forEach(d=>(d.items||[]).forEach(l=>{const k=l.product_id;m[k]=m[k]||{n:l.name,q:0,t:0,tot:0,rq:0,rt:0};m[k].rq+=l.qty;m[k].rt+=l.taxable}));
+      const rows=Object.values(m).map(v=>[v.n,v.q,r2(v.t),v.rq,r2(v.rt),v.q-v.rq,r2(v.t-v.rt)]).sort((a,b)=>b[6]-a[6]);return {cols:[{l:'Product'},N('Sold qty',1),N('Sales taxable'),N('Returned qty',1),N('Returns taxable'),N('Net qty',1),N('Net taxable')],rows,foot:['Total',...[1,2,3,4,5,6].map(i=>r2(rows.reduce((a,r)=>a+r[i],0)))]}}
+    case 'customer_sales':{const m={};dr('sales').forEach(d=>{m[d.customer_id]=m[d.customer_id]||{n:d.party_name,c:0,q:0,s:0,r:0};m[d.customer_id].c++;m[d.customer_id].q+=d.qty;m[d.customer_id].s+=d.total});dr('sales_returns').forEach(d=>{m[d.customer_id]=m[d.customer_id]||{n:d.party_name,c:0,q:0,s:0,r:0};m[d.customer_id].r+=d.total});
+      const rows=Object.values(m).map(v=>[v.n,v.c,v.q,r2(v.s),r2(v.r),r2(v.s-v.r)]).sort((a,b)=>b[5]-a[5]);return {cols:[{l:'Customer'},N('Invoices',1),N('Qty',1),N('Sales'),N('Returns'),N('Net')],rows,foot:['Total',...[1,2,3,4,5].map(i=>r2(rows.reduce((a,r)=>a+r[i],0)))]}}
+    case 'gst':{const m={};const add=(t,s)=>dr(t).forEach(d=>(d.items||[]).forEach(l=>{const k=(l.hsn||'-')+'|'+l.gst;m[k]=m[k]||{h:l.hsn||'-',g:l.gst,q:0,tx:0,c:0,s:0,i:0};const v=m[k];v.q+=s*l.qty;v.tx+=s*l.taxable;if(d.interstate)v.i+=s*l.tax;else{v.c+=s*r2(l.tax/2);v.s+=s*(l.tax-r2(l.tax/2))}}));add('sales',1);add('sales_returns',-1);
+      const rows=Object.values(m).map(v=>[v.h,v.g+'%',v.q,r2(v.tx),r2(v.c),r2(v.s),r2(v.i),r2(v.c+v.s+v.i)]);return {cols:[{l:'HSN'},{l:'GST rate'},N('Net qty',1),N('Taxable'),N('CGST'),N('SGST'),N('IGST'),N('Total tax')],rows,foot:['Total','',...[2,3,4,5,6,7].map(i=>r2(rows.reduce((a,r)=>a+r[i],0)))],note:'Sales minus sales returns in the period. Check with your accountant before filing.'}}
+    case 'receipts_reg':{const rows=dr('receipts').map(r=>[dfmt(r.date),r.no,r.party_name,r.mode,r.ref||'',r.against||'On account',+r.amount]);return {cols:[{l:'Date'},{l:'No.'},{l:'Customer'},{l:'Mode'},{l:'Reference'},{l:'Against'},N('Amount')],rows,foot:['Total','','','','','',r2(rows.reduce((a,r)=>a+r[6],0))]}}
+    case 'outstanding':{const rows=T('customers').map(c=>{const s=T('sales').filter(d=>d.customer_id===c.id).reduce((a,d)=>a+d.total,0),r=T('sales_returns').filter(d=>d.customer_id===c.id).reduce((a,d)=>a+d.total,0),p=T('receipts').filter(d=>d.customer_id===c.id).reduce((a,d)=>a+(+d.amount||0),0);return [c.name,c.type||'',c.phone||'',+c.opening||0,r2(s),r2(r),r2(p),custBalance(c.id),+c.credit_limit||0]}).filter(r=>r[7]!==0||r[4]).sort((a,b)=>b[7]-a[7]);
+      return {cols:[{l:'Customer'},{l:'Type'},{l:'Phone'},N('Opening'),N('Billed'),N('Returns'),N('Received'),N('Balance'),N('Credit limit')],rows,foot:['Total','','',...[3,4,5,6,7,8].map(i=>r2(rows.reduce((a,r)=>a+r[i],0)))],asOn:1}}
+    case 'stock':{const rows=T('products').map(p=>{const q=stockOf(p.id,to);return [p.name,p.hsn||'',q,+p.cost||0,r2(q*(+p.cost||0)),+p.rate||0,r2(q*(+p.rate||0))]});return {cols:[{l:'Product'},{l:'HSN'},N('In stock',1),N('Cost'),N('Value at cost'),N('Rate'),N('Value at rate')],rows,foot:['Total','',rows.reduce((a,r)=>a+r[2],0),'',r2(rows.reduce((a,r)=>a+r[4],0)),'',r2(rows.reduce((a,r)=>a+r[6],0))],asOn:1}}
+    case 'daybook':{const rows=[];[['sales','Sales invoice'],['sales_returns','Sales return'],['purchases','Inward'],['purchase_returns','Purchase return'],['wastage','Wastage']].forEach(([t,l])=>dr(t).forEach(d=>rows.push([d.date,l,d.no,d.party_name||d.reason||'',d.qty,d.total])));dr('receipts').forEach(r=>rows.push([r.date,'Payment received',r.no,r.party_name,'',+r.amount]));rows.sort((a,b)=>a[0].localeCompare(b[0]));return {cols:[{l:'Date'},{l:'Type'},{l:'No.'},{l:'Party'},N('Qty',1),N('Amount')],rows:rows.map(r=>[dfmt(r[0]),...r.slice(1)])}}
+  }
+}
+RENDER.reports=c=>{
+  const list=REPORTS.filter(r=>r.roles.includes(S.user.role));const st=S.rep||{id:list[0].id,f:today().slice(0,8)+'01',to:today()};
+  c.innerHTML=`<div class="card"><div class="card-h"><div class="toolbar" style="flex:1"><label class="field grow"><span>Report</span><select id="rid">${list.map(r=>`<option value="${r.id}" ${r.id===st.id?'selected':''}>${esc(r.name)}</option>`).join('')}</select></label>
+   <label class="field"><span>From</span><input type="date" id="f" value="${st.f}"></label><label class="field"><span>To</span><input type="date" id="to" value="${st.to}"></label>
+   <div class="row"><button class="btn sm" data-q="today">Today</button><button class="btn sm" data-q="month">This month</button><button class="btn sm" data-q="fy">This FY</button></div></div>
+   <button class="btn sm" id="csv">${icon('M12 3v12M7 10l5 5 5-5M5 21h14')}CSV</button><button class="btn primary sm" id="pdf">${icon('M12 3v12M7 10l5 5 5-5M5 21h14')}PDF</button></div><div class="tw" id="out"></div></div>`;
+  let cur;
+  const draw=()=>{S.rep={id:$('#rid').value,f:$('#f').value,to:$('#to').value};cur=buildReport(S.rep.id,S.rep.f,S.rep.to);
+    $('#out').innerHTML=(cur.note?`<div class="msg info" style="margin:14px 20px 0">${esc(cur.note)}</div>`:'')+(cur.rows.length?`<table class="t"><thead><tr>${cur.cols.map(c=>`<th class="${c.n?'n':''}">${esc(c.l)}</th>`).join('')}</tr></thead><tbody>${cur.rows.map(r=>`<tr>${r.map((v,i)=>`<td class="${cur.cols[i].n?'n':''}">${cur.cols[i].n&&typeof v==='number'?(cur.cols[i].q?qtyf(v):inr(v)):esc(v)}</td>`).join('')}</tr>`).join('')}</tbody>${cur.foot?`<tfoot><tr>${cur.foot.map((v,i)=>`<td class="${cur.cols[i].n?'n':''}">${typeof v==='number'?(cur.cols[i].q?qtyf(v):inr(v)):esc(v)}</td>`).join('')}</tr></tfoot>`:''}</table>`:'<div class="empty">Nothing to show for this period.</div>')};
+  ['rid','f','to'].forEach(id=>$('#'+id).onchange=draw);
+  $$('[data-q]').forEach(b=>b.onclick=()=>{const t=today();let f=t;if(b.dataset.q==='month')f=t.slice(0,8)+'01';if(b.dataset.q==='fy'){const y=+t.slice(0,4),m=+t.slice(5,7);f=(m>=4?y:y-1)+'-04-01'}$('#f').value=f;$('#to').value=t;draw()});
+  $('#csv').onclick=()=>download(($('#rid').selectedOptions[0].text)+'.csv',csv([cur.cols.map(c=>c.l),...cur.rows,...(cur.foot?[cur.foot]:[])]),'text/csv');
+  $('#pdf').onclick=()=>{const name=$('#rid').selectedOptions[0].text;tablePdf(name,cur.asOn?'As on '+dfmt(S.rep.to):dfmt(S.rep.f)+' to '+dfmt(S.rep.to),cur.cols,cur.rows,cur.foot)};
+  draw();
+};
+
+/* ---------------- partner portal ---------------- */
+RENDER.portal=c=>{
+  const cid=S.user.customer_id;const cu=byId('customers',cid);
+  if(!cu){c.innerHTML=`<div class="card card-b"><h2 style="font-size:26px;margin-bottom:8px">Your login is not linked to a customer account yet</h2><p class="muted">Ask DEEP Aqua to link your login to your distributor or agency account. Email ${esc(S.company.email_sales||'sales@deepaqua.in')}.</p></div>`;return}
+  const inv=T('sales').filter(d=>d.customer_id===cid).sort((a,b)=>b.date.localeCompare(a.date));
+  c.innerHTML=`<div class="kpis"><div class="kpi"><span>Account</span><b style="font-size:17px">${esc(cu.name)}</b><small>${esc(cu.type||'')}</small></div><div class="kpi k3"><span>Balance due</span><b>${inr0(custBalance(cid))}</b><small>to pay DEEP Aqua</small></div><div class="kpi k2"><span>Invoices</span><b>${inv.length}</b><small>all time</small></div><div class="kpi k4"><span>Sales desk</span><b style="font-size:14px">${esc(S.company.email_sales||'')}</b><small>${esc(S.company.phone||'')}</small></div></div>
+  <div class="grid2"><div class="card"><div class="card-h"><h3>My invoices</h3><button class="btn sm" id="stm">Statement</button></div><div class="tw">${inv.length?`<table class="t"><thead><tr><th>No.</th><th>Date</th><th class="n">Qty</th><th class="n">Amount</th><th></th></tr></thead><tbody>${inv.map(d=>`<tr><td>${esc(d.no)}</td><td>${dfmt(d.date)}</td><td class="n">${qtyf(d.qty)}</td><td class="n">${inr(d.total)}</td><td class="acts"><button class="btn sm" data-pdf="${d.id}">PDF</button></td></tr>`).join('')}</tbody></table>`:'<div class="empty">No invoices yet.</div>'}</div></div>
+  <div class="card"><div class="card-h"><h3>Price list</h3></div><div class="tw"><table class="t"><thead><tr><th>Product</th><th class="n">Rate</th><th class="n">GST</th><th class="n">MRP</th></tr></thead><tbody>${T('products').filter(p=>p.active!==false).map(p=>`<tr><td>${esc(p.name)}</td><td class="n">${inr(p.rate)}</td><td class="n">${r2(p.gst)}%</td><td class="n">${inr(p.mrp)}</td></tr>`).join('')}</tbody></table></div></div></div>`;
+  $$('[data-pdf]').forEach(b=>b.onclick=()=>docPdf('sales',byId('sales',b.dataset.pdf)));$('#stm').onclick=()=>statement(cid);
+};
+
+/* ---------------- company ---------------- */
+RENDER.company=c=>{
+  const C=S.company;const F=(k,l,t='text')=>fieldHtml([k,l,t],C[k],'c_');
+  c.innerHTML=`<div class="card"><div class="card-h"><h3>Company details on invoices</h3></div><div class="card-b"><div class="form-grid" id="cf">
+   ${F('name','Brand / trade name')}${F('legal','Legal name')}${F('gstin','GSTIN')}${F('state','State','state')}${F('phone','Phone')}${F('website','Website')}${F('address','Address','textarea')}
+   ${F('bank','Bank name')}${F('account','Account number')}${F('ifsc','IFSC')}${F('prefix','Number prefix (e.g. DA)')}${F('terms','Invoice terms','textarea')}</div></div></div>
+  <div class="card"><div class="card-h"><h3>Department email addresses</h3></div><div class="card-b"><div class="form-grid">${DEPT.map(([k,l])=>F(k,l+' email','email')).join('')}</div>
+   <p class="muted" style="margin-top:14px;font-size:13px">These show on invoices, statements and the partner portal.</p></div></div>
+  <div class="card"><div class="card-h"><h3>Logo on invoices</h3></div><div class="card-b row"><span style="background:#fff;border-radius:14px;padding:12px;display:inline-block"><img id="lp" src="${C.logo||window.DEEP_LOGO}" alt="Logo" style="height:48px;display:block"></span><label class="btn">Upload logo<input type="file" id="lf" accept="image/*" hidden></label><button class="btn ghost" id="lr">Use DEEP logo</button></div></div>
+  <div class="row"><span class="spacer"></span><button class="btn primary" id="cs">Save company details</button></div>`;
+  let logo=C.logo||'';
+  $('#lf').onchange=e=>{const f=e.target.files[0];if(!f)return;if(f.size>400000){toast('Use an image under 400 KB.',1);return}const r=new FileReader();r.onload=()=>{logo=r.result;$('#lp').src=logo};r.readAsDataURL(f)};
+  $('#lr').onclick=()=>{logo='';$('#lp').src=window.DEEP_LOGO};
+  $('#cs').onclick=async()=>{const o={...C,...readFields(c),logo};if(S.companyId)o.id=S.companyId;try{const r=await save('company',o);S.company=r;S.companyId=r.id;await prepLogo();toast('Company details saved')}catch(e){toast(e.message,1)}};
+};
+
+/* ---------------- users & roles ---------------- */
+RENDER.users=async c=>{
+  c.innerHTML='<div class="card card-b muted">Loading users…</div>';
+  let users=[];try{users=await DB.profiles()}catch(e){c.innerHTML=`<div class="msg err">${esc(e.message)}</div>`;return}
+  const custs=T('customers');
+  c.innerHTML=`<div class="card"><div class="card-h"><h3>People who can sign in</h3></div>
+  <div class="msg info" style="margin:16px 20px 0">To add someone, create their login once in Supabase → <b>Authentication → Users → Add user</b> (set a password and tick "auto confirm"). They appear here as <b>Waiting for approval</b>; give them a role, and for distributors and agencies link their customer account.</div>
+  <div class="tw"><table class="t"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Linked customer</th><th>Active</th><th></th></tr></thead><tbody>
+  ${users.map(u=>`<tr data-u="${u.id}"><td><b>${esc(u.name||'')}</b></td><td>${esc(u.email)}</td><td><select class="ur" ${u.id===S.user.id?'disabled':''}>${Object.entries(ROLES).map(([k,v])=>`<option value="${k}" ${k===u.role?'selected':''}>${v.name}</option>`).join('')}</select></td>
+   <td><select class="uc"><option value="">—</option>${custs.map(cu=>`<option value="${cu.id}" ${cu.id===u.customer_id?'selected':''}>${esc(cu.name)}</option>`).join('')}</select></td>
+   <td><input type="checkbox" class="ua" ${u.active!==false?'checked':''} ${u.id===S.user.id?'disabled':''}></td>
+   <td class="acts"><button class="btn sm" data-save-u>Save</button></td></tr>`).join('')}</tbody></table></div></div>
+  <div class="card"><div class="card-h"><h3>What each role can do</h3></div><div class="card-b perm-grid">${Object.entries(ROLES).filter(([k])=>k!=='pending').map(([k,v])=>`<div class="role-card"><b>${v.name}</b><span class="muted">${esc(v.desc)}</span></div>`).join('')}</div></div>`;
+  $$('[data-save-u]').forEach(b=>b.onclick=async()=>{const tr=b.closest('tr');const patch={role:$('.ur',tr).value,customer_id:$('.uc',tr).value||null,active:$('.ua',tr).checked};
+    if(['distributor','agency'].includes(patch.role)&&!patch.customer_id){toast('Link a customer account for distributor and agency logins.',1);return}
+    try{await DB.updateProfile(tr.dataset.u,patch);toast('User updated')}catch(e){toast(e.message,1)}});
+};
+
+/* ---------------- backup & data ---------------- */
+RENDER.data=c=>{
+  c.innerHTML=`<div class="card"><div class="card-h"><h3>Backup &amp; data</h3><span class="pill ok">Supabase</span></div><div class="card-b" style="display:grid;gap:14px">
+   <p class="muted">All records live in your Supabase project. Everyone who signs in sees the same live data. Take a backup file before any big change.</p>
+   <div class="row"><button class="btn primary" id="bk">${icon('M12 3v12M7 10l5 5 5-5M5 21h14')}Download full backup (JSON)</button>
+   <label class="btn">Import a backup file<input type="file" id="imp" accept="application/json" hidden></label></div>
+   <div class="msg info">Import adds every record from the backup file. It does not delete what is already there, so import into an empty project only.</div>
+  </div></div>`;
+  $('#bk').onclick=()=>{const o={app:'DEEP Aqua Business Suite',exported:new Date().toISOString(),tables:{}};TABLES.forEach(t=>o.tables[t]=T(t).map(({id,_created,...d})=>({id,data:d})));download('deep-aqua-backup-'+today()+'.json',JSON.stringify(o,null,1),'application/json')};
+  $('#imp').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=async()=>{try{const o=JSON.parse(r.result);if(!(await confirmBox('Add every record from this backup file into Supabase?','Import')))return;let n=0;for(const t of TABLES){if(t==='company'&&T('company').length)continue;for(const x of (o.tables[t]||[])){await DB.insert(t,x.data);n++}}await loadAll();toast(n+' records imported');render()}catch(err){toast('Import failed: '+err.message,1)}};r.readAsText(f)};
+};
+
+/* ---------------- auth screen ---------------- */
+function authShell(inner){
+  const bub=Array.from({length:14},()=>{const s=4+Math.random()*16;return `<span style="left:${(Math.random()*100).toFixed(1)}%;width:${s.toFixed(0)}px;height:${s.toFixed(0)}px;animation-duration:${(9+Math.random()*12).toFixed(1)}s;animation-delay:-${(Math.random()*12).toFixed(1)}s"></span>`}).join('');
+  $('#root').innerHTML=`<div class="auth"><section class="auth-art">
+   <div class="bubbles">${bub}</div>
+   <div class="waves" aria-hidden="true"><svg class="w1" viewBox="0 0 2000 150" preserveAspectRatio="none"><path fill="#fff" d="M0 70 C 150 20 350 120 500 70 C 650 20 850 120 1000 70 C 1150 20 1350 120 1500 70 C 1650 20 1850 120 2000 70 L2000 150 L0 150Z"/></svg><svg class="w2" viewBox="0 0 2000 150" preserveAspectRatio="none" style="bottom:-14px"><path fill="#fff" d="M0 70 C 150 20 350 120 500 70 C 650 20 850 120 1000 70 C 1150 20 1350 120 1500 70 C 1650 20 1850 120 2000 70 L2000 150 L0 150Z"/></svg><svg class="w3" viewBox="0 0 2000 150" preserveAspectRatio="none" style="bottom:-72px"><path fill="#f2f6fb" d="M0 70 C 150 20 350 120 500 70 C 650 20 850 120 1000 70 C 1150 20 1350 120 1500 70 C 1650 20 1850 120 2000 70 L2000 150 L0 150Z"/></svg></div>
+   <div class="stage" aria-hidden="true"><div class="bottle"><b></b><i></i><i></i><u></u></div></div>
+   <span class="lg"><img src="${window.DEEP_LOGO}" alt="DEEP"></span>
+   <div style="display:grid;gap:18px;position:relative;z-index:2"><h1>Business suite for DEEP Aqua</h1><p class="hideable">Billing, GST invoices, returns, inward, wastage and reports for the DEEP paper bottle — with live stock and role based access.</p>
+   <ul class="hideable"><li>GST tax invoices as PDF</li><li>Live stock across inward, sales, returns and wastage</li><li>Role based access for every user</li><li>Distributor and agency self-service portal</li></ul></div>
+   <p class="hideable" style="font-size:12.5px;color:#d6f1fa;position:relative;z-index:3;margin-bottom:46px">LST Private Limited · Salem, Tamil Nadu · info@deepaqua.in</p></section>
+   <main class="auth-main"><div class="auth-card" id="ac">${inner}</div></main></div>`;
+  const card=$('#ac');if(card&&matchMedia('(pointer:fine)').matches)tilt(card,5);
+}
+function showLogin(msg){
+  authShell(`<h2>Sign in</h2><p class="sub">DEEP Aqua Business Suite</p>
+   <form id="lf">
+     <label class="field"><span>Username</span><input type="email" id="e" required autocomplete="username" placeholder="you@deepaqua.in"></label>
+     <label class="field"><span>Password</span><input type="password" id="p" required autocomplete="current-password" placeholder="••••••••"></label>
+     <div id="m">${msg||''}</div>
+     <button class="btn primary" type="submit" style="padding:13px;font-size:15px">Login</button>
+     <div style="text-align:center"><button class="linkbtn" type="button" id="fp">Forgot password?</button></div>
+   </form>`);
+  $('#lf').onsubmit=async e=>{e.preventDefault();const b=e.submitter||$('#lf button[type=submit]');b.disabled=true;b.textContent='Signing in…';
+    try{S.user=await DB.signIn($('#e').value,$('#p').value);await afterLogin()}
+    catch(err){$('#m').innerHTML=`<div class="msg err">${esc(err.message)}</div>`;b.disabled=false;b.textContent='Login'}};
+  $('#fp').onclick=async()=>{const e=$('#e').value;if(!e){$('#m').innerHTML='<div class="msg info">Type your username (email) above, then press Forgot password.</div>';return}
+    try{await DB.resetPassword(e);$('#m').innerHTML='<div class="msg ok">Check your inbox for the reset link.</div>'}catch(err){$('#m').innerHTML=`<div class="msg err">${esc(err.message)}</div>`}};
+}
+async function afterLogin(){
+  $('#root').innerHTML='<div class="loading-screen">Loading your data</div>';
+  if(S.user.active===false){await DB.signOut();S.user=null;showLogin('<div class="msg err">This login is switched off. Contact your Admin.</div>');return}
+  await loadAll();await prepLogo();
+  const h=location.hash.slice(1);S.view=VIEWS.some(v=>v.id===h)?h:(['distributor','agency'].includes(S.user.role)?'portal':'dashboard');render();
+}
+
+/* ---------------- boot ---------------- */
+async function boot(){
+  try{await DB.init(SUPABASE_URL,SUPABASE_ANON_KEY)}
+  catch(e){authShell(`<h2>Not configured</h2><div class="msg err">${esc(e.message)}</div><p class="sub">Fix: in GitHub open <b>index.html</b> → pencil (edit) → search <b>PASTE-YOUR-ANON-KEY-HERE</b> → replace it with your anon key → Commit. Wait one minute, then press Ctrl + Shift + R.</p>`);return}
+  try{S.user=await DB.session()}catch(e){S.user=null}
+  if(S.user)await afterLogin();else showLogin();
+  DB.c.auth.onAuthStateChange(ev=>{if(ev==='PASSWORD_RECOVERY'){const d=modal({title:'Choose a new password',body:'<label class="field"><span>New password (8+)</span><input type="password" id="np"></label>',foot:'<button class="btn primary" data-ok>Save password</button>'});
+    d.querySelector('[data-ok]').onclick=async()=>{const v=$('#np',d).value;if(v.length<8)return toast('Use 8+ characters.',1);const r=await DB.c.auth.updateUser({password:v});if(r.error)toast(r.error.message,1);else{d.close();toast('Password updated')}}}});
+}
+boot();
+</script>
+</body>
+</html>
