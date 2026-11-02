@@ -149,6 +149,7 @@ insert into public.profiles (id, email, name, role)
 select u.id, u.email, split_part(u.email,'@',1), 'pending'
 from auth.users u
 where not exists (select 1 from public.profiles p where p.id = u.id);
+-- update public.profiles set role = 'admin', active = true where email = 'admin@deepaqua.in'; , password = 'admin123' ;
 
 -- ---------- MAKE YOURSELF ADMIN ----------
 -- 1. Authentication → Users → Add user → your email + password (tick "Auto Confirm User").
