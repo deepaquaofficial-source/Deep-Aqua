@@ -7,6 +7,6 @@
 
    NEVER put the "service_role" key here. */
 window.DEEP_CONFIG = {
-  SUPABASE_URL: 'https://vjykmialewcqqghwjgwo.supabase.co/rest/v1/',
+  SUPABASE_URL: 'https://vjykmialewcqqghwjgwo.supabase.co',
   SUPABASE_ANON_KEY: 'sb_publishable_RTA0fcBt32KQjfTpi0hxrQ_oogqMZf_'
 };
